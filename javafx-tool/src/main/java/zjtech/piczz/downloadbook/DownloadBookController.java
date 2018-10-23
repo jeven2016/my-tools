@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -24,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -68,7 +70,7 @@ public class DownloadBookController extends AbstractController {
 
   @Autowired
   public DownloadBookController(DialogUtils dialogUtils, BookService bookService,
-      JobLauncher jobLauncher, @Qualifier("downloadSingleBookJob") Job job) {
+                                JobLauncher jobLauncher, @Qualifier("downloadSingleBookJob") Job job) {
     this.dialogUtils = dialogUtils;
     this.bookService = bookService;
     this.jobLauncher = jobLauncher;
@@ -137,8 +139,8 @@ public class DownloadBookController extends AbstractController {
         selectedBook);
 
     //Launch a task to download one book
-    JobParameters parameters = new JobParameters();
-    parameters.getParameters().put(DownloadConstants.SINGLE_BOOK_PARAM, customJobParameter);
+    JobParameters parameters = new JobParametersBuilder()
+        .addParameter(DownloadConstants.SINGLE_BOOK_PARAM, customJobParameter).toJobParameters();
     try {
       ExitStatus status = jobLauncher.run(job, parameters).getExitStatus();
       String msg = getResource("error.book.start.status");

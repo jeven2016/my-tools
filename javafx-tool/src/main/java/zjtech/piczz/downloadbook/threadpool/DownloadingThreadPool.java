@@ -34,7 +34,7 @@ public class DownloadingThreadPool {
 
   private final GlobalSettingService globalSettingService;
 
-  private BlockingQueue<SinglePictureEntity> blockingQueue = new ArrayBlockingQueue(100);
+  private BlockingQueue<SinglePictureEntity> blockingQueue = new ArrayBlockingQueue(500);
 
   @Autowired
   public DownloadingThreadPool(DownloadUtil util, GlobalSettingService globalSettingService) {

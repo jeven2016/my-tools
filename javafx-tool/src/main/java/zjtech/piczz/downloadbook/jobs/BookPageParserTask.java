@@ -2,6 +2,7 @@ package zjtech.piczz.downloadbook.jobs;
 
 import java.io.IOException;
 import java.util.Optional;
+
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -65,6 +66,7 @@ public class BookPageParserTask implements Tasklet {
     }
 
     //update status
+    singleBookEntity.getPictures().clear();//clear old pictures
     singleBookEntity.setStatus(StatusEnum.PARSING);
 
     // find the sub page count
@@ -75,9 +77,13 @@ public class BookPageParserTask implements Tasklet {
     int splitIndex = href.lastIndexOf("/");
     String prefix = href.substring(0, splitIndex);
     int count = Integer.parseInt(href.substring(splitIndex + 1));//count of sub pages
+    singleBookEntity.setPicPageCount(count);
 
     //TODO: parese the name this book from html page
+    Element nameElem = document.selectFirst("h1[class='entry-title']");
+    singleBookEntity.setName(nameElem.text());
 
+    int picCount = 0;
     // navigate to each sub page
     for (int i = 1; i <= count; i++) {
       document = Jsoup.connect(prefix + "/" + i).timeout(timeout).get();
@@ -92,9 +98,13 @@ public class BookPageParserTask implements Tasklet {
         pictureEntity.setSubPageNo(i);
 
         singleBookEntity.addPicture(pictureEntity);
-        log.info("add a picture for book : {}", pictureEntity.getBooKName());
+        picCount++;
       }
     }
+
+    singleBookEntity.setPicCount(picCount);
+
+    log.info("{} pictures of book {} will be downloaded....", picCount, singleBookEntity.getName());
 
     //update the book entity in db
     return bookService.save(singleBookEntity);

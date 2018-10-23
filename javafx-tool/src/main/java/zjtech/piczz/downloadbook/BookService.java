@@ -8,6 +8,7 @@
 package zjtech.piczz.downloadbook;
 
 import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class BookService {
 
   @Transactional(propagation = Propagation.REQUIRES_NEW)
   public SingleBookEntity save(SingleBookEntity singleBookEntity) {
-    if (bookRep.findByUrl(singleBookEntity.getUrl().trim()) != null) {
+    if (singleBookEntity.getId() <= 0 && bookRep.findByUrl(singleBookEntity.getUrl().trim()) != null) {
       throw new ToolException(DownloadErrorCode.BOOK_DUPLICATED);
     }
     return bookRep.save(singleBookEntity);
