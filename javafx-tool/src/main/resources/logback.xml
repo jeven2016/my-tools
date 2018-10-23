@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2018 Zjtech. All rights reserved.
+  ~ This material is the confidential property of Zjtech or its
+  ~ licensors and may be used, reproduced, stored or transmitted only in
+  ~ accordance with a valid MIT license or sublicense agreement.
+  -->
+
+<configuration>
+
+  <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <pattern>%date %-5level [%thread] %logger{36} [%file:%line] %msg%n</pattern>
+    </layout>
+  </appender>
+
+  <!-- Note: please change the log level in applications.properties file -->
+  <root level="INFO">
+    <appender-ref ref="STDOUT"/>
+  </root>
+</configuration>
