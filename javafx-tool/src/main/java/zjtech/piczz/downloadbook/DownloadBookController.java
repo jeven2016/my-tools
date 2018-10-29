@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -84,9 +85,9 @@ public class DownloadBookController extends AbstractController {
 
   @Autowired
   public DownloadBookController(ApplicationContext applicationContext, DialogUtils dialogUtils,
-      BookService bookService,
-      JobLauncher jobLauncher,
-      @Qualifier("downloadSingleBookJob") Job job, InfoUtils infoUtils) {
+                                BookService bookService,
+                                JobLauncher jobLauncher,
+                                @Qualifier("downloadSingleBookJob") Job job, InfoUtils infoUtils) {
     this.applicationContext = applicationContext;
     this.dialogUtils = dialogUtils;
     this.bookService = bookService;
@@ -109,6 +110,7 @@ public class DownloadBookController extends AbstractController {
     }
     SingleBookEntity singleBookEntity = new SingleBookEntity();
     singleBookEntity.setUrl(link);
+    singleBookEntity.setStatus(StatusEnum.NEW_ADDED);
     try {
       bookService.save(singleBookEntity);
     } catch (ToolException e) {
@@ -203,17 +205,14 @@ public class DownloadBookController extends AbstractController {
     //Launch a task to download one book
     JobParameters parameters = new JobParametersBuilder()
         .addParameter(DownloadConstants.SINGLE_BOOK_PARAM, customJobParameter).toJobParameters();
-    Platform.runLater(() -> {
-      try {
-        log.info("launching a job for book: {}", selectedBook.getUrl());
-        jobLauncher.run(job, parameters);
-        log.info("The task is running for {}", selectedBook.getUrl());
-      } catch (Exception e) {
-        log.warn("failed to launch downloading task", e);
-        dialogUtils.alertException(getResource("error.book.start.failed"), e);
-      }
-    });
-
+    try {
+      log.info("launching a job for book: {}", selectedBook.getUrl());
+      jobLauncher.run(job, parameters);
+      log.info("The task is running for {}", selectedBook.getUrl());
+    } catch (Exception e) {
+      log.warn("failed to launch downloading task", e);
+      dialogUtils.alertException(getResource("error.book.start.failed"), e);
+    }
   }
 
   /**
@@ -223,6 +222,13 @@ public class DownloadBookController extends AbstractController {
     tableView.getItems().stream()
         .filter(singleBookEntity -> StatusEnum.FAILED.equals(singleBookEntity.getStatus()))
         .forEach(this::submitDownloadTask);
+  }
+
+  /**
+   * Bulk start for books marked with new
+   */
+  public void bulkStart() {
+
   }
 
   public void exportXml() {
@@ -242,10 +248,14 @@ public class DownloadBookController extends AbstractController {
     dialog.setTitle(getResource("dialog.book.choose.dir"));
     dialog.setHeaderText(null);
     dialog.getDialogPane().setContent(loaderEntity.getParent());
-    ((ImportExportController) loaderEntity.getFxmlLoader().getController()).setType(type);
+    ImportExportController controller = loaderEntity.getFxmlLoader().getController();
+    controller.setType(type);
+    controller.setInfoArea(infoArea);
 
     //auto close while click 'X'
     Window window = dialog.getDialogPane().getScene().getWindow();
+
+    controller.setWindow(window);
     window.setOnCloseRequest(event -> window.hide());
     return dialog;
   }

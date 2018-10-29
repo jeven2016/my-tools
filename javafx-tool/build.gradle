@@ -7,7 +7,8 @@ dependencies {
   // https://mvnrepository.com/artifact/org.jsoup/jsoup
   compile group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
   compile 'com.netflix.archaius:archaius-core:2.0.0-rc.7'
-
+  compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
+  
 //  compile 'de.jensd:fontawesomefx-emojione:2.2.7-2'
 //  compile 'de.jensd:fontawesomefx-fontawesome:4.7.0-5'
 //  compile 'de.jensd:fontawesomefx-icons525:3.0.0-4'
