@@ -75,7 +75,7 @@ public class SingleBookEntity {
     FAILED("Failed"),
     PARSING("Parsing"),
     RUNNING("Running"),
-    STOPPED("Stopped");
+    COMPLETED("Completed");
 
     private String value;
 

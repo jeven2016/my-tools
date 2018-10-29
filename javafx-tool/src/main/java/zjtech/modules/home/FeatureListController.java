@@ -74,7 +74,7 @@ public class FeatureListController extends AbstractController {
 
   private void showPicPane() {
     Pane navPane = globalView.getNavPane();
-    Parent parent = loadFxml(FxmlPath.picNav.value());
+    Parent parent = loadParent(FxmlPath.picNav.value());
     navPane.getChildren().setAll((AnchorPane) parent);
   }
 

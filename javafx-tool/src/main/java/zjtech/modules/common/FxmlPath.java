@@ -13,7 +13,8 @@ public enum FxmlPath {
 
   picNav("/fxml/pic/nav.fxml"),
   globalSetting("/fxml/pic/global_setting.fxml"),
-  downloadBook("/fxml/pic/download_book.fxml");
+  downloadBook("/fxml/pic/download_book.fxml"),
+  exportImportDialog("/fxml/pic/import_export_dialog.fxml");
 
   private String value;
 

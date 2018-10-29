@@ -24,8 +24,12 @@ public abstract class AbstractController implements Initializable {
   @Autowired
   private FxmlUtils fxmlUtils;
 
-  protected Parent loadFxml(String path) {
+  protected Parent loadParent(String path) {
     return fxmlUtils.loadFxml(path).getParent();
+  }
+
+  protected LoaderEntity load(String path) {
+    return fxmlUtils.loadFxml(path);
   }
 
   @Override

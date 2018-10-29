@@ -12,6 +12,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -21,10 +23,12 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
-<TitledPane xmlns:fx="http://javafx.com/fxml/1" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-  AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" styleClass="info"
-  stylesheets="@../../skin/bootstrap3.css" text="Download Book"
-  xmlns="http://javafx.com/javafx/8.0.121"
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
+<TitledPane styleClass="info" stylesheets="@../../skin/bootstrap3.css" text="Download Book"
+  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+  AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.121"
+  xmlns:fx="http://javafx.com/fxml/1"
   fx:controller="zjtech.piczz.downloadbook.DownloadBookController">
 
   <AnchorPane prefHeight="0.0" prefWidth="573.0">
@@ -32,9 +36,9 @@
       <HBox spacing="5.0">
         <children>
           <Label prefHeight="20.0" prefWidth="83.0" text="Book URL:"/>
-          <TextField onKeyPressed="#triggerAdd" prefHeight="26.0" prefWidth="350.0"
-            fx:id="bookUrlInput"/>
-          <Button mnemonicParsing="false" onAction="#addBook" text="Add" fx:id="addBookBtn">
+          <TextField fx:id="bookUrlInput" onKeyPressed="#triggerAdd" prefHeight="26.0"
+            prefWidth="350.0"/>
+          <Button fx:id="addBookBtn" mnemonicParsing="false" onAction="#addBook" text="Add">
             <styleClass>
               <String fx:value="success"/>
               <String fx:value="action-btn"/>
@@ -56,7 +60,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
         </rowConstraints>
         <children>
-          <TableView prefHeight="321.0" prefWidth="945.0" fx:id="tableView">
+          <TableView fx:id="tableView" prefHeight="321.0" prefWidth="945.0">
             <columns>
               <TableColumn prefWidth="51.0" text="ID">
                 <cellValueFactory>
@@ -84,22 +88,22 @@
           </TableView>
         </children>
       </GridPane>
-      <HBox AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" layoutX="10.0" layoutY="421.0"
-        prefWidth="100.0" spacing="10.0">
+      <HBox layoutX="10.0" layoutY="421.0" prefWidth="100.0" spacing="10.0"
+        AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <children>
-          <Button mnemonicParsing="false" onAction="#refresh" text="Refresh" fx:id="refreshBtn">
+          <Button fx:id="refreshBtn" mnemonicParsing="false" onAction="#refresh" text="Refresh">
             <styleClass>
               <String fx:value="success"/>
               <String fx:value="action-btn"/>
             </styleClass>
           </Button>
-          <Button mnemonicParsing="false" onAction="#start" text="Start" fx:id="startBtn">
-            <styleClass>
-              <String fx:value="info"/>
-              <String fx:value="action-btn"/>
-            </styleClass>
-          </Button>
-          <Button mnemonicParsing="false" text="Stop" fx:id="stopBtn">
+          <MenuButton mnemonicParsing="false" text="Start" styleClass="action-btn,middle,info">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Start Now" onAction="#start"/>
+              <MenuItem mnemonicParsing="false" text="Start For Failure" onAction="#startFailure"/>
+            </items>
+          </MenuButton>
+          <Button fx:id="stopBtn" mnemonicParsing="false" text="Stop">
             <styleClass>
               <String fx:value="action-btn"/>
               <String fx:value="warning"/>
@@ -108,14 +112,30 @@
           <Button mnemonicParsing="false" onAction="#delete" text="Delete">
             <styleClass>
               <String fx:value="action-btn"/>
-              <String fx:value="info"/>
+              <String fx:value="danger"/>
             </styleClass>
             <HBox.margin>
               <Insets left="50.0"/>
             </HBox.margin>
           </Button>
+          <MenuButton mnemonicParsing="false" text="Import/Export" styleClass="action-btn,middle,info">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Export XML" onAction="#exportXml"/>
+              <MenuItem mnemonicParsing="false" text="Import XML" onAction="#importXml"/>
+            </items>
+          </MenuButton>
         </children>
       </HBox>
+      <AnchorPane layoutY="470.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <TextFlow fx:id="infoArea" prefHeight="48.0" prefWidth="444.0" visible="false"
+          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+          AnchorPane.topAnchor="0.0" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS"
+          GridPane.rowIndex="0">
+          <Text styleClass="strong" text="Well done!"/>
+          <Text text="You successfully read this important alert message."/>
+        </TextFlow>
+      </AnchorPane>
     </children>
   </AnchorPane>
+
 </TitledPane>

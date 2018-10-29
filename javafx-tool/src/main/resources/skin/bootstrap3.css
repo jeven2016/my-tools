@@ -975,3 +975,418 @@ VBox > .split-menu-button.last > .arrow-button {
 .slider:vertical .track {
   -fx-pref-width: 5;
 }
+
+
+/*** merge the following css from bootstrapfx project */
+.alert {
+  -fx-padding: 15px;
+  -fx-border-width: 1px;
+  -fx-border-style: solid;
+  -fx-border-color: black;
+  -fx-border-radius: 4px;
+  -fx-background-radius: 4px;
+}
+
+.alert-success {
+  -fx-background-color: linear-gradient(to bottom, #dff0d8 0px, #c8e5bc 100%);
+  -fx-border-color: #d6e9c6;
+  -fx-text-fill: #3c763d;
+  -fx-fill: #3c763d;
+}
+.alert-success * {
+  -fx-background-color: transparent;
+  -fx-text-fill: #3c763d;
+  -fx-fill: #3c763d;
+}
+
+.alert-info {
+  -fx-background-color: linear-gradient(to bottom, #d9edf7 0px, #b9def0 100%);
+  -fx-border-color: #bce8f1;
+  -fx-text-fill: #31708f;
+  -fx-fill: #31708f;
+}
+.alert-info * {
+  -fx-background-color: transparent;
+  -fx-text-fill: #31708f;
+  -fx-fill: #31708f;
+}
+
+.alert-warning {
+  -fx-background-color: linear-gradient(to bottom, #fcf8e3 0px, #f8efc0 100%);
+  -fx-border-color: #faebcc;
+  -fx-text-fill: #8a6d3b;
+  -fx-fill: #8a6d3b;
+}
+.alert-warning * {
+  -fx-background-color: transparent;
+  -fx-text-fill: #8a6d3b;
+  -fx-fill: #8a6d3b;
+}
+
+.alert-danger {
+  -fx-background-color: linear-gradient(to bottom, #f2dede 0px, #e7c3c3 100%);
+  -fx-border-color: #ebccd1;
+  -fx-text-fill: #a94442;
+  -fx-fill: #a94442;
+}
+.alert-danger * {
+  -fx-background-color: transparent;
+  -fx-text-fill: #a94442;
+  -fx-fill: #a94442;
+}
+
+
+.tooltip-primary {
+  -fx-background: #337ab7;
+  -fx-background-color: #337ab7;
+  -fx-text-fill: #fff;
+  -fx-border-color: #3175af;
+  -fx-background-radius: 4px;
+  -fx-border-radius: 4px;
+  -fx-background-insets: 0;
+  -fx-padding: 0.667em 0.75em 0.667em 0.75em;
+  /* 10px */
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 10, 0, 0, 3);
+  -fx-font-size: 0.85em;
+}
+
+.tooltip-success {
+  -fx-background: #5cb85c;
+  -fx-background-color: #5cb85c;
+  -fx-text-fill: #fff;
+  -fx-border-color: #55b555;
+  -fx-background-radius: 4px;
+  -fx-border-radius: 4px;
+  -fx-background-insets: 0;
+  -fx-padding: 0.667em 0.75em 0.667em 0.75em;
+  /* 10px */
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 10, 0, 0, 3);
+  -fx-font-size: 0.85em;
+}
+
+.tooltip-info {
+  -fx-background: #5bc0de;
+  -fx-background-color: #5bc0de;
+  -fx-text-fill: #fff;
+  -fx-border-color: #53bddc;
+  -fx-background-radius: 4px;
+  -fx-border-radius: 4px;
+  -fx-background-insets: 0;
+  -fx-padding: 0.667em 0.75em 0.667em 0.75em;
+  /* 10px */
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 10, 0, 0, 3);
+  -fx-font-size: 0.85em;
+}
+
+.tooltip-warning {
+  -fx-background: #f0ad4e;
+  -fx-background-color: #f0ad4e;
+  -fx-text-fill: #fff;
+  -fx-border-color: #efa945;
+  -fx-background-radius: 4px;
+  -fx-border-radius: 4px;
+  -fx-background-insets: 0;
+  -fx-padding: 0.667em 0.75em 0.667em 0.75em;
+  /* 10px */
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 10, 0, 0, 3);
+  -fx-font-size: 0.85em;
+}
+
+.tooltip-danger {
+  -fx-background: #d9534f;
+  -fx-background-color: #d9534f;
+  -fx-text-fill: #fff;
+  -fx-border-color: #d74b47;
+  -fx-background-radius: 4px;
+  -fx-border-radius: 4px;
+  -fx-background-insets: 0;
+  -fx-padding: 0.667em 0.75em 0.667em 0.75em;
+  /* 10px */
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 10, 0, 0, 3);
+  -fx-font-size: 0.85em;
+}
+
+
+.lbl {
+  -fx-padding: .2em .6em .3em .6em;
+  -fx-font-size: 75%;
+  -fx-font-weight: bold;
+  -fx-text-fill: #fff;
+  -fx-fill: #fff;
+  -fx-text-alignment: center;
+  -fx-alignment: baseline-center;
+  -fx-border-radius: .25em;
+  -fx-background-radius: .25em;
+}
+
+.lbl-default {
+  -fx-background-color: #777777;
+}
+.lbl-default[href]:hover, .lbl-default[href]:focused {
+  -fx-background-color: #5e5e5e;
+}
+
+.lbl-primary {
+  -fx-background-color: #337ab7;
+}
+.lbl-primary[href]:hover, .lbl-primary[href]:focused {
+  -fx-background-color: #286090;
+}
+
+.lbl-success {
+  -fx-background-color: #5cb85c;
+}
+.lbl-success[href]:hover, .lbl-success[href]:focused {
+  -fx-background-color: #449d44;
+}
+
+.lbl-info {
+  -fx-background-color: #5bc0de;
+}
+.lbl-info[href]:hover, .lbl-info[href]:focused {
+  -fx-background-color: #31b0d5;
+}
+
+.lbl-warning {
+  -fx-background-color: #f0ad4e;
+}
+.lbl-warning[href]:hover, .lbl-warning[href]:focused {
+  -fx-background-color: #ec971f;
+}
+
+.lbl-danger {
+  -fx-background-color: #d9534f;
+}
+.lbl-danger[href]:hover, .lbl-danger[href]:focused {
+  -fx-background-color: #c9302c;
+}
+
+
+
+.b,
+.strong {
+  -fx-font-weight: bold;
+}
+
+.i,
+.em,
+.italic,
+.dfn {
+  -fx-font-style: italic;
+}
+
+.h1 {
+  -fx-font-size: 2em;
+}
+
+.small {
+  -fx-font-size: 80%;
+}
+
+.code,
+.kbd,
+.pre,
+.samp {
+  -fx-font-family: 'monospace';
+  -fx-font-size: 1em;
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  -fx-text-fill: inherit;
+  -fx-fill: inherit;
+}
+.h1 small,
+.h1 .small, .h2 small,
+.h2 .small, .h3 small,
+.h3 .small, .h4 small,
+.h4 .small, .h5 small,
+.h5 .small, .h6 small,
+.h6 .small {
+  -fx-font-weight: normal;
+  -fx-text-fill: #777777;
+  -fx-fill: #777777;
+}
+
+.h1 small,
+.h1 .small,
+.h2 small,
+.h2 .small,
+.h3 small,
+.h3 .small {
+  -fx-font-size: 65%;
+}
+
+.h4 small,
+.h4 .small,
+.h5 small,
+.h5 .small,
+.h6 small,
+.h6 .small {
+  -fx-font-size: 75%;
+}
+
+.h1 {
+  -fx-font-size: 36px;
+}
+
+.h2 {
+  -fx-font-size: 30px;
+}
+
+.h3 {
+  -fx-font-size: 24px;
+}
+
+.h4 {
+  -fx-font-size: 18px;
+}
+
+.h5 {
+  -fx-font-size: 14px;
+}
+
+.h6 {
+  -fx-font-size: 12px;
+}
+
+.lead {
+  -fx-font-size: 16px;
+  -fx-font-weight: 300;
+}
+
+.small {
+  -fx-font-size: 85%;
+}
+
+/*
+.mark {
+  -fx-background-color: $state-warning-bg;
+  -fx-padding: .2em;
+}
+*/
+.text-left {
+  -fx-text-alignment: left;
+}
+
+.text-right {
+  -fx-text-alignment: right;
+}
+
+.text-center {
+  -fx-text-alignment: center;
+}
+
+.text-justify {
+  -fx-text-alignment: justify;
+}
+
+.text-muted {
+  -fx-text-fill: #777777;
+  -fx-fill: #777777;
+}
+
+.text-primary {
+  -fx-text-fill: #337ab7;
+  -fx-fill: #337ab7;
+}
+
+a.text-primary:hover,
+a.text-primary:focused {
+  -fx-text-fill: #286090;
+  -fx-fill: #286090;
+}
+
+.text-success {
+  -fx-text-fill: #3c763d;
+  -fx-fill: #3c763d;
+}
+
+a.text-success:hover,
+a.text-success:focused {
+  -fx-text-fill: #2b542c;
+  -fx-fill: #2b542c;
+}
+
+.text-info {
+  -fx-text-fill: #31708f;
+  -fx-fill: #31708f;
+}
+
+a.text-info:hover,
+a.text-info:focused {
+  -fx-text-fill: #245269;
+  -fx-fill: #245269;
+}
+
+.text-warning {
+  -fx-text-fill: #8a6d3b;
+  -fx-fill: #8a6d3b;
+}
+
+a.text-warning:hover,
+a.text-warning:focused {
+  -fx-text-fill: #66512c;
+  -fx-fill: #66512c;
+}
+
+.text-danger {
+  -fx-text-fill: #a94442;
+  -fx-fill: #a94442;
+}
+
+a.text-danger:hover,
+a.text-danger:focused {
+  -fx-text-fill: #843534;
+  -fx-fill: #843534;
+}
+
+
+.bg-primary {
+  -fx-text-fill: #fff;
+  -fx-fill: #fff;
+}
+
+.bg-primary {
+  -fx-background-color: #337ab7;
+}
+
+a.bg-primary:hover,
+a.bg-primary:focused {
+  --fxbackground-color: #286090;
+}
+
+.bg-success {
+  -fx-background-color: #dff0d8;
+}
+
+a.bg-success:hover,
+a.bg-success:focused {
+  --fxbackground-color: #c1e2b3;
+}
+
+.bg-info {
+  -fx-background-color: #d9edf7;
+}
+
+a.bg-info:hover,
+a.bg-info:focused {
+  --fxbackground-color: #afd9ee;
+}
+
+.bg-warning {
+  -fx-background-color: #fcf8e3;
+}
+
+a.bg-warning:hover,
+a.bg-warning:focused {
+  --fxbackground-color: #f7ecb5;
+}
+
+.bg-danger {
+  -fx-background-color: #f2dede;
+}
+
+a.bg-danger:hover,
+a.bg-danger:focused {
+  --fxbackground-color: #e4b9b9;
+}

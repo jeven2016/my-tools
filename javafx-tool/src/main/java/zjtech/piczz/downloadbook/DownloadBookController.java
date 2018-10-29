@@ -11,30 +11,41 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+import javafx.stage.Window;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import zjtech.modules.common.AbstractController;
 import zjtech.modules.common.CustomJobParameter;
 import zjtech.modules.common.DialogUtils;
+import zjtech.modules.common.FxmlPath;
+import zjtech.modules.common.LoaderEntity;
+import zjtech.modules.common.ToolException;
+import zjtech.modules.utils.InfoUtils;
+import zjtech.modules.utils.InfoUtils.InfoType;
 import zjtech.piczz.common.DownloadConstants;
+import zjtech.piczz.downloadbook.ImportExportController.Type;
+import zjtech.piczz.downloadbook.SingleBookEntity.StatusEnum;
 
 @Component
 @Slf4j
@@ -53,28 +64,35 @@ public class DownloadBookController extends AbstractController {
   public Button refreshBtn;
 
   @FXML
-  public Button startBtn;
-
-  @FXML
   public Button stopBtn;
 
   private final DialogUtils dialogUtils;
 
   private final BookService bookService;
 
-  final
-  JobLauncher jobLauncher;
 
-  final
-  Job job;
+  private final JobLauncher jobLauncher;
+
+  private final Job job;
+
+  @FXML
+  private TextFlow infoArea;
+
+  private final InfoUtils infoUtils;
+
+  private ApplicationContext applicationContext;
 
   @Autowired
-  public DownloadBookController(DialogUtils dialogUtils, BookService bookService,
-                                JobLauncher jobLauncher, @Qualifier("downloadSingleBookJob") Job job) {
+  public DownloadBookController(ApplicationContext applicationContext, DialogUtils dialogUtils,
+      BookService bookService,
+      JobLauncher jobLauncher,
+      @Qualifier("downloadSingleBookJob") Job job, InfoUtils infoUtils) {
+    this.applicationContext = applicationContext;
     this.dialogUtils = dialogUtils;
     this.bookService = bookService;
     this.jobLauncher = jobLauncher;
     this.job = job;
+    this.infoUtils = infoUtils;
   }
 
 
@@ -91,20 +109,45 @@ public class DownloadBookController extends AbstractController {
     }
     SingleBookEntity singleBookEntity = new SingleBookEntity();
     singleBookEntity.setUrl(link);
-    bookService.save(singleBookEntity);
+    try {
+      bookService.save(singleBookEntity);
+    } catch (ToolException e) {
+      String resource = getResource(e.getErrorCode().getCode().toString());
+      infoUtils.showInfo(infoArea, InfoType.FAILURE, new Text(resource));
+      log.info("Failed to insert a duplicated book for url {}", link);
+      return;
+    }
 
     bookUrlInput.clear();
+
+    String msg = String.format(getResource("success.book.add"), link);
+    infoUtils.showInfo(infoArea, InfoType.SUCCESS, new Text(msg));
+    log.info(msg);
     refresh();
   }
 
   public void delete() {
-    long id = tableView.getSelectionModel().getSelectedItem().getId();
+    SingleBookEntity bookEntity = tableView.getSelectionModel().getSelectedItem();
+    if (bookEntity == null) {
+      infoUtils.showInfo(infoArea, InfoType.WARNING,
+          new Text(getResource("error.book.deletion.failed")));
+      log.info("NO book is specified to be deleted.");
+      return;
+    }
+    long id = bookEntity.getId();
     Optional<ButtonType> opt = dialogUtils.confirm(getResource("confirm.book.delete.title"),
         getResource("confirm.book.delete.content"));
     if (opt.isPresent() && opt.get() == ButtonType.OK) {
       bookService.delete(id);
+
+      // show the result
+      String msg = String.format(getResource("success.book.delete"), bookEntity.getUrl());
+      infoUtils.showInfo(infoArea, InfoType.SUCCESS, new Text(msg));
+
+      log.info("The book (ID={}, URL={}) is deleted successfully.", id, bookEntity.getUrl());
       refresh();
     }
+
   }
 
   @Override
@@ -116,6 +159,7 @@ public class DownloadBookController extends AbstractController {
     List<SingleBookEntity> list = bookService.findAll();
     ObservableList<SingleBookEntity> observableList = FXCollections.observableArrayList(list);
     tableView.setItems(observableList);
+    log.info("refresh the list of books");
   }
 
   public void triggerAdd(KeyEvent keyEvent) {
@@ -125,31 +169,84 @@ public class DownloadBookController extends AbstractController {
   }
 
   /**
-   * Start a task
+   * Start task(s)
    */
   public void start() {
     SingleBookEntity selectedBook = tableView.getSelectionModel().getSelectedItem();
     if (selectedBook == null) {
-      dialogUtils
-          .alert(getResource("error.book.start.title"), getResource("error.book.start.content"));
-      return;
-    }
+      Optional<ButtonType> typeOpt = dialogUtils
+          .confirm(getResource("confirm.book.download.all.title"),
+              getResource("confirm.book.download.all.content"));
 
-    CustomJobParameter<SingleBookEntity> customJobParameter = new CustomJobParameter<SingleBookEntity>(
+      if (typeOpt.isPresent() && typeOpt.get() == ButtonType.OK) {
+        tableView.getItems().forEach(this::submitDownloadTask);
+        infoUtils
+            .showInfo(infoArea, InfoType.SUCCESS,
+                new Text(getResource("success.book.start.all")));
+        log.info("launch taks for all books in the table.");
+      }
+    } else {
+      submitDownloadTask(selectedBook);
+      infoUtils
+          .showInfo(infoArea, InfoType.SUCCESS,
+              new Text(
+                  String.format(getResource("success.book.start.one"), selectedBook.getUrl())));
+      log.info("launch a tak for book {}", selectedBook.getUrl());
+    }
+    refresh();
+  }
+
+  private void submitDownloadTask(SingleBookEntity selectedBook) {
+    CustomJobParameter<SingleBookEntity> customJobParameter = new CustomJobParameter<>(
         selectedBook);
 
     //Launch a task to download one book
     JobParameters parameters = new JobParametersBuilder()
         .addParameter(DownloadConstants.SINGLE_BOOK_PARAM, customJobParameter).toJobParameters();
-    try {
-      ExitStatus status = jobLauncher.run(job, parameters).getExitStatus();
-      String msg = getResource("error.book.start.status");
-      msg = String.format(msg, status.getExitCode());
-      dialogUtils.info(null, msg);
-    } catch (Exception e) {
-      dialogUtils.alertException(getResource("error.book.start.failed"), e);
-      log.warn("failed to launch downloading task", e);
-    }
+    Platform.runLater(() -> {
+      try {
+        log.info("launching a job for book: {}", selectedBook.getUrl());
+        jobLauncher.run(job, parameters);
+        log.info("The task is running for {}", selectedBook.getUrl());
+      } catch (Exception e) {
+        log.warn("failed to launch downloading task", e);
+        dialogUtils.alertException(getResource("error.book.start.failed"), e);
+      }
+    });
 
+  }
+
+  /**
+   * start tasks for downloading books marked with 'FAILED' status
+   */
+  public void startFailure() {
+    tableView.getItems().stream()
+        .filter(singleBookEntity -> StatusEnum.FAILED.equals(singleBookEntity.getStatus()))
+        .forEach(this::submitDownloadTask);
+  }
+
+  public void exportXml() {
+    LoaderEntity loaderEntity = load(FxmlPath.exportImportDialog.value());
+    Dialog dialog = getDialog(loaderEntity, Type.EXPORT);
+    dialog.showAndWait();
+  }
+
+  public void importXml() {
+    LoaderEntity loaderEntity = load(FxmlPath.exportImportDialog.value());
+    Dialog dialog = getDialog(loaderEntity, Type.IMPORT);
+    dialog.showAndWait();
+  }
+
+  private Dialog getDialog(LoaderEntity loaderEntity, Type type) {
+    Dialog dialog = new Dialog();
+    dialog.setTitle(getResource("dialog.book.choose.dir"));
+    dialog.setHeaderText(null);
+    dialog.getDialogPane().setContent(loaderEntity.getParent());
+    ((ImportExportController) loaderEntity.getFxmlLoader().getController()).setType(type);
+
+    //auto close while click 'X'
+    Window window = dialog.getDialogPane().getScene().getWindow();
+    window.setOnCloseRequest(event -> window.hide());
+    return dialog;
   }
 }

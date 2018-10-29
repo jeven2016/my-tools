@@ -34,7 +34,7 @@ public class DownloadingThreadPool {
 
   private final GlobalSettingService globalSettingService;
 
-  private BlockingQueue<SinglePictureEntity> blockingQueue = new ArrayBlockingQueue(500);
+  private BlockingQueue<SinglePictureEntity> blockingQueue = new ArrayBlockingQueue(1000);
 
   @Autowired
   public DownloadingThreadPool(DownloadUtil util, GlobalSettingService globalSettingService) {
@@ -68,9 +68,12 @@ public class DownloadingThreadPool {
     }
   }
 
-  public void addPictures(Collection<SinglePictureEntity> pictureEntity) {
+  public void addPictures(Collection<SinglePictureEntity> pictureEntities) {
+
     try {
-      blockingQueue.addAll(pictureEntity);
+      for (SinglePictureEntity singlePictureEntity : pictureEntities) {
+        blockingQueue.put(singlePictureEntity);
+      }
     } catch (Exception e) {
       log.info("cannot add pictures to queue", e);
     }

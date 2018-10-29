@@ -56,6 +56,8 @@ public class DialogUtils {
 
   public Optional<ButtonType> alertException(String message, Throwable ex) {
     Alert alert = new Alert(AlertType.ERROR);
+    alert.setWidth(250);
+    alert.setHeight(300);
     alert.setTitle(ResourceLocater.getBundle().getString("error.global.exception.dialog.title"));
     alert.setHeaderText(ResourceLocater.getBundle().getString("error.global.exception.title"));
     alert.setContentText(message);

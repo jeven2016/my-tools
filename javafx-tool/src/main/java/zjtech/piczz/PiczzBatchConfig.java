@@ -1,6 +1,10 @@
 package zjtech.piczz;
 
 
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.launch.support.SimpleJobLauncher;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,16 +22,36 @@ public class PiczzBatchConfig {
   private int threadPoolCount;
 
 
+  /**
+   * Init thread pool for asynchronous task
+   *
+   * @return TaskExecutor
+   */
   @Bean
   public TaskExecutor customTaskExecutor() {
     ThreadPoolTaskExecutor threadPool = new ThreadPoolTaskExecutor();
     threadPool.setCorePoolSize(threadPoolCount);
+    threadPool.setMaxPoolSize(10);
+    threadPool.afterPropertiesSet();
     return threadPool;
   }
 
+  /**
+   * Asynchronous job launcher
+   *
+   * @return SimpleAsyncTaskExecutor
+   */
   @Bean
   public SimpleAsyncTaskExecutor taskExecutor() {
     return new SimpleAsyncTaskExecutor();
   }
 
+  @Bean("asyncJobLauncher")
+  public JobLauncher jobLauncher(@Autowired JobRepository jobRepository) throws Exception {
+    SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
+    jobLauncher.setJobRepository(jobRepository);
+    jobLauncher.setTaskExecutor(taskExecutor());
+    jobLauncher.afterPropertiesSet();
+    return jobLauncher;
+  }
 }

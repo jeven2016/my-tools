@@ -1,6 +1,6 @@
 package zjtech.piczz.downloadbook.jobs;
 
-import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -12,7 +12,10 @@ import zjtech.piczz.downloadbook.SingleBookEntity;
 import zjtech.piczz.downloadbook.SinglePictureEntity;
 import zjtech.piczz.downloadbook.threadpool.DownloadingThreadPool;
 
+import java.util.Set;
+
 @Component
+@Slf4j
 public class DownloadSingleBookTask implements Tasklet {
 
   @Autowired
@@ -25,6 +28,10 @@ public class DownloadSingleBookTask implements Tasklet {
         .getStepExecution().getJobExecution()
         .getExecutionContext().get(DownloadConstants.SINGLE_BOOK_PARAM);
 
+    if (singleBookEntity == null) {
+      log.warn("book entity is null and the task have to finish.");
+      return RepeatStatus.FINISHED;
+    }
     Set<SinglePictureEntity> set = singleBookEntity.getPictures();
     downloadingThreadPool.run();
     downloadingThreadPool.addPictures(set);

@@ -10,7 +10,7 @@ spring:
       #not automatically execute with the start of Spring Boot.
       #And batch job will be triggered when specific link.
       enabled: false
-    table-prefix: batch_
+    table-prefix: BATCH_
 
 
 task:

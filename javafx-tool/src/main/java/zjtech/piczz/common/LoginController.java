@@ -64,7 +64,7 @@ public class LoginController extends AbstractController {
     }
 
     //navigate to next scene
-    Scene scene = new Scene(loadFxml(FxmlPath.home.value()));
+    Scene scene = new Scene(loadParent(FxmlPath.home.value()));
     stage.setScene(scene);
     stage.setResizable(true);
     stage.show();

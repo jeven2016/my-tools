@@ -38,10 +38,10 @@ public class NavController extends AbstractController {
   }
 
   private void showDownloadBookContent() {
-    globalView.getContentPane().getChildren().setAll(loadFxml(FxmlPath.downloadBook.value()));
+    globalView.getContentPane().getChildren().setAll(loadParent(FxmlPath.downloadBook.value()));
   }
 
   private void showGlobalSettingContent() {
-    globalView.getContentPane().getChildren().setAll(loadFxml(FxmlPath.globalSetting.value()));
+    globalView.getContentPane().getChildren().setAll(loadParent(FxmlPath.globalSetting.value()));
   }
 }

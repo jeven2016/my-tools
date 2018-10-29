@@ -18,7 +18,6 @@ dependencies {
 //  compile 'de.jensd:fontawesomefx-controls:8.15'
 //  compile 'org.controlsfx:controlsfx:8.40.11'
 
-
   compile libs.lombok
   compile "org.springframework.boot:spring-boot-starter-batch"
   compile libs.'h2-database'
@@ -28,5 +27,6 @@ dependencies {
   compile libs.'spring-boot-starter-cache'
 
   runtime libs.'h2-database'
+  runtime libs.mysql
   compile libs.'spring-boot-starter-aop'
 }
