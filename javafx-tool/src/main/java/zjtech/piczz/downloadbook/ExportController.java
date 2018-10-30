@@ -1,14 +1,12 @@
 package zjtech.piczz.downloadbook;
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
-
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -25,15 +23,10 @@ import zjtech.modules.utils.InfoUtils;
 //refer to : https://www.baeldung.com/jackson-xml-serialization-and-deserialization
 @Component
 @Slf4j
-public class ImportExportController extends AbstractController {
-
-  @FXML
-  public Button performBtn;
+public class ExportController extends AbstractController {
 
   @FXML
   public TextField directoryInput;
-
-  private Type type;
 
   private final DialogUtils dialogUtils;
 
@@ -46,8 +39,8 @@ public class ImportExportController extends AbstractController {
   private Window window;
 
   @Autowired
-  public ImportExportController(DialogUtils dialogUtils, BookService bookService,
-                                InfoUtils infoUtils) {
+  public ExportController(DialogUtils dialogUtils, BookService bookService,
+      InfoUtils infoUtils) {
     this.dialogUtils = dialogUtils;
     this.bookService = bookService;
     this.infoUtils = infoUtils;
@@ -56,28 +49,17 @@ public class ImportExportController extends AbstractController {
   public void chooseDir(ActionEvent actionEvent) {
     Stage stage = getCurrentStage(actionEvent);
     DirectoryChooser directoryChooser = new DirectoryChooser();
-    directoryChooser.setTitle("Choose a directory");
+    directoryChooser.setTitle(getResource("dialog.book.choose.dir"));
 
     File file = directoryChooser.showDialog(stage);
     if (file == null) {
       return;
     }
     if (!file.isDirectory()) {
-      dialogUtils.alert("Invalid directory", "Please choose valid directory!");
+      dialogUtils.alert("Invalid directory", getResource("dialog.book.choose.dir.content"));
       return;
     }
     directoryInput.setText(file.getAbsolutePath());
-  }
-
-
-  public void setType(Type type) {
-    this.type = type;
-    if (type.equals(Type.IMPORT)) {
-      performBtn.setText("Import Now");
-    }
-    if (type.equals(Type.EXPORT)) {
-      performBtn.setText("Export Now");
-    }
   }
 
   public void setInfoArea(TextFlow infoArea) {
@@ -88,28 +70,25 @@ public class ImportExportController extends AbstractController {
     this.window = window;
   }
 
-  public void perform(ActionEvent actionEvent) throws IOException {
-    if (type.equals(Type.IMPORT)) {
+  public void perform() throws IOException {
+    boolean isDir = Paths.get(directoryInput.getText()).toFile().isDirectory();
+    if (!isDir) {
+      dialogUtils.alert("Invalid directory", getResource("dialog.book.choose.dir.content"));
+      return;
     }
-    if (type.equals(Type.EXPORT)) {
-      List<SingleBookEntity> bookList = bookService.findAll();
-      bookList.forEach(book -> book.getPictures().clear());
+    XmlMapper xmlMapper = new XmlMapper();
+    File outputFile = new File(directoryInput.getText() + "/exportedBooks.xml");
 
-      XmlMapper xmlMapper = new XmlMapper();
-      File outputFile = new File(directoryInput.getText() + "/exportedBooks.xml");
-      xmlMapper.writeValue(outputFile, bookList);
+    List<SingleBookEntity> bookList = bookService.findAll();
+    bookList.forEach(book -> book.getPictures().clear());
+    xmlMapper.writeValue(outputFile, bookList);
+    Text text = new Text(getResource("success.book.export"));
 
-      //close dialog
-      window.hide();
+    //close dialog
+    window.hide();
 
-      //show result
-      infoUtils.showInfo(infoArea, InfoUtils.InfoType.SUCCESS, new Text("Xml file is exported."));
-    }
+    //show result
+    infoUtils.showInfo(infoArea, InfoUtils.InfoType.SUCCESS, text);
 
   }
-
-  public enum Type {
-    IMPORT, EXPORT;
-  }
-
 }

@@ -7,15 +7,18 @@
 
 package zjtech.piczz.downloadbook;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import zjtech.modules.common.ToolException;
 import zjtech.piczz.common.DownloadErrorCode;
+import zjtech.piczz.downloadbook.SingleBookEntity.StatusEnum;
 
 @Service
 @Slf4j
@@ -24,16 +27,33 @@ public class BookService {
   @Autowired
   SingleBookRep bookRep;
 
-  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  @Transactional
   public SingleBookEntity save(SingleBookEntity singleBookEntity) {
-    if (singleBookEntity.getId() <= 0 && bookRep.findByUrl(singleBookEntity.getUrl().trim()) != null) {
+    if (singleBookEntity.getId() <= 0
+        && bookRep.findByUrl(singleBookEntity.getUrl().trim()) != null) {
       throw new ToolException(DownloadErrorCode.BOOK_DUPLICATED);
     }
     return bookRep.save(singleBookEntity);
   }
 
+  @Transactional
+  public Collection<SingleBookEntity> saveList(Collection<SingleBookEntity> entities) {
+    if (entities == null || entities.isEmpty()) {
+      return new ArrayList<>();
+    }
+    return bookRep.saveAll(entities);
+  }
+
   public List<SingleBookEntity> findAll() {
     return bookRep.findAll();
+  }
+
+  public List<SingleBookEntity> findByStatus(Stream<StatusEnum> statusEnumStream) {
+    return bookRep.findByStatusIn(statusEnumStream.collect(Collectors.toList()));
+  }
+
+  public int updateStatus(long id, StatusEnum statusEnum) {
+    return bookRep.updatestatus(id, statusEnum);
   }
 
   @Transactional

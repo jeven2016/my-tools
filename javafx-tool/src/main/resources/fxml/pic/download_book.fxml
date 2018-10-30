@@ -100,6 +100,7 @@
           <MenuButton mnemonicParsing="false" text="Start" styleClass="action-btn,middle,info">
             <items>
               <MenuItem mnemonicParsing="false" text="Start Now" onAction="#start"/>
+              <MenuItem mnemonicParsing="false" text="Bulk Start" onAction="#bulkStart"/>
               <MenuItem mnemonicParsing="false" text="Start For Failure" onAction="#startFailure"/>
             </items>
           </MenuButton>

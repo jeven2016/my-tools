@@ -8,22 +8,21 @@
 <?import javafx.scene.layout.AnchorPane?>
 <AnchorPane prefHeight="188.0" prefWidth="602.0" stylesheets="@../../skin/bootstrap3.css"
   xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
-  fx:controller="zjtech.piczz.downloadbook.ImportExportController">
+  fx:controller="zjtech.piczz.downloadbook.ImportController">
   <children>
     <Label layoutX="10.0" layoutY="36.0" styleClass="text-primary"
-      text="Please choose the directory to proceed:"/>
-    <TextField fx:id="directoryInput" editable="false" layoutX="10.0" layoutY="60.0" prefWidth="457.0"
+      text="%dialog.book.choose.file.content"/>
+    <TextField fx:id="fileInput" editable="false" layoutX="10.0" layoutY="60.0" prefWidth="457.0"
       styleClass="text-input first"/>
-    <Button layoutX="473.0" layoutY="60.0" mnemonicParsing="false" text="Chooose Path"
-      onAction="#chooseDir">
+    <Button layoutX="473.0" layoutY="60.0" mnemonicParsing="false" onAction="#chooseFile"
+      text="%book.btn.choose.file">
       <styleClass>
         <String fx:value="btn"/>
         <String fx:value="primary"/>
       </styleClass>
     </Button>
-    <Button fx:id="performBtn" layoutX="267.0" visible="true" layoutY="119.0"
-      mnemonicParsing="false"
-      text="Export Now" onAction="#perform">
+    <Button fx:id="performBtn" layoutX="250.0" layoutY="118.0" mnemonicParsing="false"
+      onAction="#perform" text="%book.btn.import" visible="true">
       <styleClass>
         <String fx:value="btn"/>
         <String fx:value="success"/>

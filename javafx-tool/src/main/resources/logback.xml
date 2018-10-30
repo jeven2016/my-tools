@@ -23,6 +23,6 @@
   <!-- Note: please change the log level in applications.properties file -->
   <root level="INFO">
     <appender-ref ref="STDOUT"/>
-    <appender-ref ref="textArea"/>
+    <!--<appender-ref ref="textArea"/>-->
   </root>
 </configuration>

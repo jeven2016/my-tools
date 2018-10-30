@@ -2,7 +2,6 @@ package zjtech.piczz.downloadbook.jobs;
 
 import java.io.IOException;
 import java.util.Optional;
-
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -52,8 +51,7 @@ public class BookPageParserTask implements Tasklet {
           .getExecutionContext();
       context.put(DownloadConstants.SINGLE_BOOK_PARAM, singleBookEntity);
     } catch (Exception e) {
-      singleBookEntity.setStatus(StatusEnum.FAILED);
-      bookService.save(singleBookEntity);
+      bookService.updateStatus(singleBookEntity.getId(), StatusEnum.FAILED);
     }
     return RepeatStatus.FINISHED;
   }
@@ -67,7 +65,8 @@ public class BookPageParserTask implements Tasklet {
 
     //update status
     singleBookEntity.getPictures().clear();//clear old pictures
-    singleBookEntity.setStatus(StatusEnum.PARSING);
+
+    bookService.updateStatus(singleBookEntity.getId(), StatusEnum.PARSING);
 
     // find the sub page count
     Document document = Jsoup.connect(singleBookEntity.getUrl()).timeout(timeout).get();
@@ -107,6 +106,7 @@ public class BookPageParserTask implements Tasklet {
     log.info("{} pictures of book {} will be downloaded....", picCount, singleBookEntity.getName());
 
     //update the book entity in db
+    singleBookEntity.setStatus(StatusEnum.PARSED);
     return bookService.save(singleBookEntity);
   }
 }

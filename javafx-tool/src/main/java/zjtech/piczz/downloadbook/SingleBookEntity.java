@@ -7,6 +7,7 @@
 
 package zjtech.piczz.downloadbook;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -30,6 +31,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SingleBookEntity {
 
+  @JsonIgnore
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
@@ -74,7 +76,9 @@ public class SingleBookEntity {
     NEW_ADDED("New added"),
     FAILED("Failed"),
     PARSING("Parsing"),
-    RUNNING("Running"),
+    PARSED("Parsed"),
+    IGNORED("Ignored"),
+    DWONLOADING("Dwonloading"),
     COMPLETED("Completed");
 
     private String value;
