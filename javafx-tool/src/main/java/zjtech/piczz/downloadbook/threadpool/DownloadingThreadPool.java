@@ -52,10 +52,7 @@ public class DownloadingThreadPool {
       if (isRunning) {
         return;
       }
-      GlobalSettingEntity settingEntity = globalSettingService.getOne()
-          .orElseGet(GlobalSettingEntity::new);
-
-      int threadCount = settingEntity.getDownloadThreadCount();
+      int threadCount = initThreadCount();
       log.info("thread count is {}", threadCount);
       executorService = Executors.newFixedThreadPool(threadCount);
       for (int i = 0; i < threadCount; i++) {
@@ -66,6 +63,13 @@ public class DownloadingThreadPool {
     } finally {
       lock.unlock();
     }
+  }
+
+  private int initThreadCount() {
+    GlobalSettingEntity settingEntity = globalSettingService.getOne()
+        .orElseGet(GlobalSettingEntity::new);
+
+    return settingEntity.getDownloadThreadCount();
   }
 
   public void addPictures(Collection<SinglePictureEntity> pictureEntities) {
@@ -79,15 +83,11 @@ public class DownloadingThreadPool {
     }
   }
 
-  public void addPicture(SinglePictureEntity pictureEntity) {
-    try {
-      blockingQueue.put(pictureEntity);
-    } catch (Exception e) {
-      log.info("cannot add pic to queue", pictureEntity.getUrl(), e);
-    }
-  }
-
   public int getPoolSize() {
     return blockingQueue.size();
+  }
+
+  public int getThreadCount() {
+    return initThreadCount();
   }
 }

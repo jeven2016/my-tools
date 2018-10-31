@@ -16,6 +16,7 @@ import javafx.stage.StageStyle;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import zjtech.modules.common.FxmlPath;
@@ -24,6 +25,7 @@ import zjtech.modules.common.ResourceLocater;
 @SpringBootApplication
 @EnableScheduling
 @EnableBatchProcessing
+@EnableCaching
 public class DpApplication extends Application {
 
   private ConfigurableApplicationContext applicationContext;

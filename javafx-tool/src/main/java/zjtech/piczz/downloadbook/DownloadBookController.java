@@ -259,6 +259,23 @@ public class DownloadBookController extends AbstractController {
 
   }
 
+  public void showDownloadingProgress() {
+    LoaderEntity loaderEntity = this.load(FxmlPath.poolInfoDialog.value());
+    Dialog dialog = new Dialog();
+    dialog.setTitle(getResource("dialog.book.pool.info.title"));
+    dialog.setHeaderText(null);
+    dialog.getDialogPane().setContent(loaderEntity.getParent());
+    PoolController controller = loaderEntity.getFxmlLoader().getController();
+
+    //auto close while click 'X'
+    Window window = dialog.getDialogPane().getScene().getWindow();
+
+    controller.setWindow(window);
+    controller.setInfoArea(infoArea);
+    window.setOnCloseRequest(event -> window.hide());
+    dialog.showAndWait();
+  }
+
   public void exportXml() {
     LoaderEntity loaderEntity = load(FxmlPath.exportDialog.value());
     Dialog dialog = new Dialog();

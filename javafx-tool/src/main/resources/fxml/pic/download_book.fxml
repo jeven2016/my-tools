@@ -77,6 +77,16 @@
                   <PropertyValueFactory property="status"/>
                 </cellValueFactory>
               </TableColumn>
+              <TableColumn prefWidth="99.0" text="Pages">
+                <cellValueFactory>
+                  <PropertyValueFactory property="picPageCount"/>
+                </cellValueFactory>
+              </TableColumn>
+              <TableColumn prefWidth="99.0" text="Pictures">
+                <cellValueFactory>
+                  <PropertyValueFactory property="picCount"/>
+                </cellValueFactory>
+              </TableColumn>
               <TableColumn prefWidth="99.0" text="Succeed"/>
               <TableColumn prefWidth="103.0" text="Failed"/>
               <TableColumn prefWidth="368.0" text="URL">
@@ -97,11 +107,11 @@
               <String fx:value="action-btn"/>
             </styleClass>
           </Button>
-          <MenuButton mnemonicParsing="false" text="Start" styleClass="action-btn,middle,info">
+          <MenuButton mnemonicParsing="false" styleClass="action-btn,middle,info" text="Start">
             <items>
-              <MenuItem mnemonicParsing="false" text="Start Now" onAction="#start"/>
-              <MenuItem mnemonicParsing="false" text="Bulk Start" onAction="#bulkStart"/>
-              <MenuItem mnemonicParsing="false" text="Start For Failure" onAction="#startFailure"/>
+              <MenuItem mnemonicParsing="false" onAction="#start" text="Start Now"/>
+              <MenuItem mnemonicParsing="false" onAction="#bulkStart" text="Bulk Start"/>
+              <MenuItem mnemonicParsing="false" onAction="#startFailure" text="Start For Failure"/>
             </items>
           </MenuButton>
           <Button fx:id="stopBtn" mnemonicParsing="false" text="Stop">
@@ -119,12 +129,22 @@
               <Insets left="50.0"/>
             </HBox.margin>
           </Button>
-          <MenuButton mnemonicParsing="false" text="Import/Export" styleClass="action-btn,middle,info">
+          <MenuButton mnemonicParsing="false" styleClass="action-btn,middle,info"
+            text="Import/Export">
             <items>
-              <MenuItem mnemonicParsing="false" text="Export XML" onAction="#exportXml"/>
-              <MenuItem mnemonicParsing="false" text="Import XML" onAction="#importXml"/>
+              <MenuItem mnemonicParsing="false" onAction="#exportXml" text="Export XML"/>
+              <MenuItem mnemonicParsing="false" onAction="#importXml" text="Import XML"/>
             </items>
           </MenuButton>
+          <Button mnemonicParsing="false" text="Show Progress" onAction="#showDownloadingProgress">
+            <HBox.margin>
+              <Insets right="10.0"/>
+            </HBox.margin>
+            <styleClass>
+              <String fx:value="action-btn"/>
+              <String fx:value="success"/>
+            </styleClass>
+          </Button>
         </children>
       </HBox>
       <AnchorPane layoutY="470.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">

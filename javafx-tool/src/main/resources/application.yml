@@ -21,6 +21,7 @@ spring:
       test-while-idle: false
       test-on-borrow: true # Validate the connection before borrowing it from the pool. to avoid SQL exception: Connection has already been closed
 
+# Set log level
 logging:
   level:
     root: INFO

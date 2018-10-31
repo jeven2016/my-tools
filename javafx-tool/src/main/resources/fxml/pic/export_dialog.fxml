@@ -6,25 +6,30 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-
-<AnchorPane prefHeight="188.0" prefWidth="602.0" stylesheets="@../../skin/bootstrap3.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zjtech.piczz.downloadbook.ExportController">
+<AnchorPane prefHeight="188.0" prefWidth="602.0" stylesheets="@../../skin/bootstrap3.css"
+  xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+  fx:controller="zjtech.piczz.downloadbook.ExportController">
   <children>
-    <Label layoutX="10.0" layoutY="36.0" styleClass="text-primary" text="Please choose the directory to proceed:" />
-    <TextField fx:id="directoryInput" editable="false" layoutX="10.0" layoutY="60.0" prefWidth="457.0" styleClass="text-input first" />
-    <Button layoutX="473.0" layoutY="60.0" mnemonicParsing="false" onAction="#chooseDir" text="Chooose Path">
+    <Label layoutX="10.0" layoutY="36.0" styleClass="text-primary"
+      text="Please choose the directory to proceed:"/>
+    <TextField fx:id="directoryInput" editable="false" layoutX="10.0" layoutY="60.0"
+      prefWidth="457.0" styleClass="text-input first"/>
+    <Button layoutX="473.0" layoutY="60.0" mnemonicParsing="false" onAction="#chooseDir"
+      text="Chooose Path">
       <styleClass>
-        <String fx:value="btn" />
-        <String fx:value="primary" />
+        <String fx:value="btn"/>
+        <String fx:value="primary"/>
       </styleClass>
     </Button>
-    <Button fx:id="performBtn" layoutX="250.0" layoutY="118.0" mnemonicParsing="false" onAction="#perform" text="Export Now" visible="true">
+    <Button fx:id="performBtn" layoutX="250.0" layoutY="118.0" mnemonicParsing="false"
+      onAction="#perform" text="Export Now" visible="true">
       <styleClass>
-        <String fx:value="btn" />
-        <String fx:value="success" />
+        <String fx:value="btn"/>
+        <String fx:value="success"/>
       </styleClass>
     </Button>
   </children>
   <padding>
-    <Insets left="10.0" />
+    <Insets left="10.0"/>
   </padding>
 </AnchorPane>

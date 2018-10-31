@@ -20,6 +20,7 @@ import javafx.scene.control.TextField;
 import javafx.util.converter.NumberStringConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import zjtech.modules.common.AbstractController;
 import zjtech.piczz.gs.GlobalSettingEntity;
@@ -27,6 +28,7 @@ import zjtech.piczz.gs.GlobalSettingService;
 
 @Component
 @Slf4j
+@Lazy
 public class GlobalSettingController extends AbstractController {
 
   private final GlobalSettingService settingService;
