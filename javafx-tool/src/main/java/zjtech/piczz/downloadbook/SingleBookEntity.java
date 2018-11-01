@@ -8,18 +8,11 @@
 package zjtech.piczz.downloadbook;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,6 +22,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@NamedEntityGraph(name = "book.all", attributeNodes = {@NamedAttributeNode("pictures")})
 public class SingleBookEntity {
 
   @JsonIgnore
@@ -54,7 +48,7 @@ public class SingleBookEntity {
 
   @OneToMany(
       cascade = {CascadeType.ALL},
-      fetch = FetchType.EAGER,
+      fetch = FetchType.LAZY,
       orphanRemoval = true
   )
   @JoinColumn(name = "piczz_single_book_id", nullable = false)
