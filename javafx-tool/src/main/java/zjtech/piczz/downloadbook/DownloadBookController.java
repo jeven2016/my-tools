@@ -43,6 +43,7 @@ import zjtech.modules.common.FxmlPath;
 import zjtech.modules.common.LoaderEntity;
 import zjtech.modules.common.NoArgCallback;
 import zjtech.modules.common.ToolException;
+import zjtech.modules.common.cache.EhcacheUtil;
 import zjtech.modules.utils.InfoUtils;
 import zjtech.modules.utils.InfoUtils.InfoType;
 import zjtech.piczz.common.DownloadConstants;
@@ -214,13 +215,16 @@ public class DownloadBookController extends AbstractController {
     }
   }
 
+  @Autowired
+  private EhcacheUtil ehcacheUtil;
   /**
    * start tasks for downloading books marked with 'FAILED' status
    */
   public void startFailure() {
-    tableView.getItems().stream()
+    ehcacheUtil.listKeys("books");
+   /* tableView.getItems().stream()
         .filter(singleBookEntity -> StatusEnum.FAILED.equals(singleBookEntity.getStatus()))
-        .forEach(this::submitDownloadTask);
+        .forEach(this::submitDownloadTask);*/
   }
 
   /**

@@ -30,3 +30,4 @@ spring:
         show_sql: true
         use_sql_comments: false
         format_sql: false
+#    open-in-view: true #打开延迟加载特性所置

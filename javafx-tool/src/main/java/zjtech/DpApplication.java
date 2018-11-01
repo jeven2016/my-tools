@@ -68,5 +68,6 @@ public class DpApplication extends Application {
   @Override
   public void stop() throws Exception {
     applicationContext.close();
+    System.exit(0);
   }
 }

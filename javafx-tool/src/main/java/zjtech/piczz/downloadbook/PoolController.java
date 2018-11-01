@@ -52,6 +52,5 @@ public class PoolController extends AbstractController {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    System.out.println("init PoolController....");
   }
 }

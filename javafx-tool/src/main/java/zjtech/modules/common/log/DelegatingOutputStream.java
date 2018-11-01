@@ -15,12 +15,12 @@ public class DelegatingOutputStream extends FilterOutputStream {
       }
     });
 
-    System.out.println("DelegatingOutputStream -> init"); //OK called
+//    System.out.println("DelegatingOutputStream -> init"); //OK called
   }
 
   void setOutputStream(OutputStream outputStream) {
     this.out = outputStream;
 
-    System.out.println("DelegatingOutputStream -> setOutputStream"); //OK called
+//    System.out.println("DelegatingOutputStream -> setOutputStream"); //OK called
   }
 }

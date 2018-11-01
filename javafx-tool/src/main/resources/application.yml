@@ -6,7 +6,7 @@ spring:
   application:
     name: download-pic
   profiles:
-    include: batch, h2
+    include: batch, h2, cache
   datasource:
     tomcat:
       time-between-eviction-runs-millis: 300000

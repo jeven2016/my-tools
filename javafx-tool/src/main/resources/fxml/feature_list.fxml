@@ -19,7 +19,7 @@
     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
   </padding>
 
-  <Button mnemonicParsing="false" onAction="#click" text="Picture Downloading Tool" fx:id="picBtn">
+  <Button mnemonicParsing="false" onAction="#click" text="%feature.cartoon" fx:id="picBtn">
     <styleClass>
       <String fx:value="default"/>
       <String fx:value="first"/>

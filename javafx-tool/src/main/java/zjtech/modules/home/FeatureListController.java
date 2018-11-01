@@ -59,7 +59,6 @@ public class FeatureListController extends AbstractController {
         styleList.remove("success");
         styleList.add("default");
       }
-      System.out.println(btnNode.getStyleClass().toArray(new String[]{}));
     });
 
     switch (id) {

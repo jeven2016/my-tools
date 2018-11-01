@@ -27,13 +27,13 @@
       <children>
         <Label prefHeight="16.0" prefWidth="142.0" text="Pictures"/>
         <Label text="Thread Count" GridPane.rowIndex="1"/>
-        <Text fx:id="pictures" fill="#eb420a" strokeType="OUTSIDE" strokeWidth="0.0" text="345"
+        <Text fx:id="pictures" fill="#eb420a" strokeType="OUTSIDE" strokeWidth="0.0"
           GridPane.columnIndex="1">
           <font>
             <Font name="System Bold" size="18.0"/>
           </font>
         </Text>
-        <Text fx:id="threadCount" fill="#0c51e8" strokeType="OUTSIDE" strokeWidth="0.0" text="6"
+        <Text fx:id="threadCount" fill="#0c51e8" strokeType="OUTSIDE" strokeWidth="0.0"
           GridPane.columnIndex="1" GridPane.rowIndex="1"/>
       </children>
     </GridPane>
