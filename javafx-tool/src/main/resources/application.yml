@@ -7,19 +7,6 @@ spring:
     name: download-pic
   profiles:
     include: batch, h2, cache
-  datasource:
-    tomcat:
-      time-between-eviction-runs-millis: 300000
-      min-evictable-idle-time-millis: 300000
-      max-wait: 10000
-      max-active: 50
-      max-idle: 20
-      min-idle: 5
-      remove-abandoned: true
-      remove-abandoned-timeout: 40
-      num-tests-per-eviction-run: 0
-      test-while-idle: false
-      test-on-borrow: true # Validate the connection before borrowing it from the pool. to avoid SQL exception: Connection has already been closed
 
 # Set log level
 logging:

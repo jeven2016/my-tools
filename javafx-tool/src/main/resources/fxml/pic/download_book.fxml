@@ -120,15 +120,16 @@
               <String fx:value="warning"/>
             </styleClass>
           </Button>
-          <Button mnemonicParsing="false" onAction="#delete" text="Delete">
-            <styleClass>
-              <String fx:value="action-btn"/>
-              <String fx:value="danger"/>
-            </styleClass>
+          <MenuButton mnemonicParsing="false" styleClass="action-btn,middle,danger"
+                      text="Delete">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#delete" text="Delete Book"/>
+              <MenuItem mnemonicParsing="false" onAction="#deleteAllPictures" text="Delete All Pictures"/>
+            </items>
             <HBox.margin>
               <Insets left="50.0"/>
             </HBox.margin>
-          </Button>
+          </MenuButton>
           <MenuButton mnemonicParsing="false" styleClass="action-btn,middle,info"
             text="Import/Export">
             <items>

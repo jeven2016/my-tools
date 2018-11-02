@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -83,17 +84,23 @@ public class DownloadBookController extends AbstractController {
 
   private ApplicationContext applicationContext;
 
+  private final PicRep picRep;
+
   @Autowired
   public DownloadBookController(ApplicationContext applicationContext, DialogUtils dialogUtils,
-      BookService bookService,
-      @Qualifier("asyncJobLauncher") JobLauncher jobLauncher,
-      @Qualifier("downloadSingleBookJob") Job job, InfoUtils infoUtils) {
+                                BookService bookService,
+                                @Qualifier("asyncJobLauncher") JobLauncher jobLauncher,
+                                @Qualifier("downloadSingleBookJob") Job job,
+                                InfoUtils infoUtils, PicRep picRep,
+                                EhcacheUtil ehcacheUtil) {
     this.applicationContext = applicationContext;
     this.dialogUtils = dialogUtils;
     this.bookService = bookService;
     this.jobLauncher = jobLauncher;
     this.job = job;
     this.infoUtils = infoUtils;
+    this.picRep = picRep;
+    this.ehcacheUtil = ehcacheUtil;
   }
 
 
@@ -215,16 +222,16 @@ public class DownloadBookController extends AbstractController {
     }
   }
 
-  @Autowired
-  private EhcacheUtil ehcacheUtil;
+  private final EhcacheUtil ehcacheUtil;
+
   /**
    * start tasks for downloading books marked with 'FAILED' status
    */
   public void startFailure() {
     ehcacheUtil.listKeys("books");
-   /* tableView.getItems().stream()
+    tableView.getItems().stream()
         .filter(singleBookEntity -> StatusEnum.FAILED.equals(singleBookEntity.getStatus()))
-        .forEach(this::submitDownloadTask);*/
+        .forEach(this::submitDownloadTask);
   }
 
   /**
@@ -317,6 +324,12 @@ public class DownloadBookController extends AbstractController {
 
     window.setOnCloseRequest(event -> window.hide());
     dialog.showAndWait();
+  }
+
+  public void deleteAllPictures() {
+    picRep.deleteAll();
+    infoUtils.showInfo(infoArea, InfoType.SUCCESS,
+        new Text(getResource("success.book.delete.all.pictures")));
   }
 
 }

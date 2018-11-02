@@ -66,14 +66,22 @@ public class DownloadUtil {
 
   }
 
-  public boolean isBookExisted(SingleBookEntity bookEntity) {
-    String storagePath = settingService.getOne().get().getStorageDirectory();
+  public boolean isBookExisted(String bookName) {
+    Path strPath = getBookPath(bookName);
+    return Files.exists(strPath);
+  }
+
+  private Path getBookPath(String bookName, GlobalSettingEntity settingEntity) {
+    String storagePath = settingEntity.getStorageDirectory();
     if (!storagePath.endsWith("/")) {
       storagePath += "/";
     }
-    String folderName = storagePath + bookEntity.getName();
-    Path strPath = Paths.get(folderName);
-    return Files.exists(strPath);
+    String folderName = storagePath + bookName;
+    return Paths.get(folderName);
+  }
+
+  private Path getBookPath(String bookName) {
+    return getBookPath(bookName, settingService.getOne().get());
   }
 
   public SinglePictureEntity process(SinglePictureEntity item) throws Exception {
@@ -81,37 +89,30 @@ public class DownloadUtil {
     if (!StringUtils.isBlank(url)) {
 
       GlobalSettingEntity settingEntity = settingService.getOne().get();
-      String storagePath = settingService.getOne().get().getStorageDirectory();
       int retryCount = settingEntity.getNumberOfRetries();
 
-      //generate the local directory
-      String folderName = item.getBooKName();
-      if (!storagePath.endsWith("/")) {
-        storagePath += "/";
-      }
-      folderName = storagePath + folderName;
-      Path strPath = Paths.get(folderName);
+      Path strPath = getBookPath(item.getBooKName(), settingEntity);
       if (Files.notExists(strPath)) {
         Files.createDirectories(strPath);
       }
 
       //construct the file path
       String picType = url.substring(url.lastIndexOf("."));
-      String fileName = folderName + "/" + new StringBuilder().append(item.getSubPageNo())
-          .append("-").append(item.getPicIndexInfo()).append(picType).toString();
+      Path fileName = strPath.resolve(Paths.get(new StringBuilder().append(item.getSubPageNo())
+          .append("-").append(item.getPicIndexInfo()).append(picType).toString()));
 
-      log.info("fileName=" + fileName);
-      if (Files.exists(Paths.get(fileName))) {
+      log.info("pic fileName=" + fileName);
+      if (Files.exists(fileName)) {
         //continue
         return null;
       }
-      log.info("will download pic: " + fileName);
+      log.info("will download pic({}), url={} ", item.getBooKName(), url);
 
       int count = 0;
       do {
         try {
           //download the pic
-          downloadUsingStream(url, fileName);
+          downloadUsingStream(url, fileName.toAbsolutePath().toString());
           break;
         } catch (Exception e) {
           if (count < retryCount) {

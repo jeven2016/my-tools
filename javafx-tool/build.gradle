@@ -32,6 +32,8 @@ dependencies {
   compile group: 'org.ehcache', name: 'ehcache', version: '3.6.1'
   compile 'javax.cache:cache-api'
 
+  compile 'com.zaxxer:HikariCP'
+
   runtime libs.'h2-database'
   runtime libs.mysql
   compile libs.'spring-boot-starter-aop'

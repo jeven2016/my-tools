@@ -4,6 +4,8 @@ package zjtech.common;
 import java.util.ArrayList;
 import java.util.Objects;
 import javax.cache.Cache;
+import javax.sql.DataSource;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class CacheUtilTest {
 
   @Autowired
   private GlobalSettingService globalSettingService;
+
+  @Autowired
+  private DataSource dataSource;
 
 
   @Test
@@ -46,6 +51,11 @@ public class CacheUtilTest {
       System.out.println("The key exists: " + key);
     });
 
+  }
+
+  @Test
+  public void dataSourceTest() {
+    System.out.println(dataSource.getClass());
   }
 
 

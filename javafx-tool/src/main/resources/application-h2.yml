@@ -1,4 +1,3 @@
-
 spring:
   datasource:
     url: "jdbc:h2:file:~/h2/download-pic;DB_CLOSE_ON_EXIT=FALSE"
@@ -7,18 +6,14 @@ spring:
     password: 1
     driver-class-name: org.h2.Driver
     platform: h2
-    tomcat:
-      time-between-eviction-runs-millis: 300000
-      min-evictable-idle-time-millis: 300000
-      max-wait: 10000
-      max-active: 50
-      max-idle: 20
-      min-idle: 5
-      remove-abandoned: true
-      remove-abandoned-timeout: 40
-      num-tests-per-eviction-run: 0
-      test-while-idle: false
-      test-on-borrow: true # Validate the connection before borrowing it from the pool. to avoid SQL exception: Connection has already been closed
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      max-lifetime: 1800000
+      maximum-pool-size: 15
+      minimum-idle: 5
+      connection-test-query: select 1
+      connection-timeout: 30000
+      pool-name: hikariPool
     continue-on-error: true # Do not stop if an error occurs while initializing the database
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect

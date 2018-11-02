@@ -24,7 +24,6 @@ public interface SingleBookRep extends JpaRepository<SingleBookEntity, Long> {
   @EntityGraph(value = "book.all", type = EntityGraph.EntityGraphType.FETCH)
   List<SingleBookEntity> findAll();
 
-  //  List<SingleBookEntity> findByStatusIn(Collection<StatusEnum> statusEnumCollection);
 
   /**
    * 不使用jpa2.1的这个新特性，将会有很多sql查询语句。用了此特性后子表查询会使用left outer join方式去查询关联表
