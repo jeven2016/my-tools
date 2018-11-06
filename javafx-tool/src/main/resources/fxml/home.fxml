@@ -76,7 +76,7 @@
       <SplitPane fx:id="mainContentPane" dividerPositions="0.1" prefHeight="160.0" prefWidth="200.0"
         BorderPane.alignment="TOP_LEFT">
         <items>
-          <AnchorPane fx:id="navPane">
+          <AnchorPane fx:id="navPane" prefWidth="230" maxWidth="250">
 
           </AnchorPane>
           <AnchorPane fx:id="contentPane">

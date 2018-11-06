@@ -15,14 +15,11 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import zjtech.piczz.downloadbook.SingleBookEntity;
 import zjtech.piczz.downloadbook.SinglePictureEntity;
 import zjtech.piczz.gs.GlobalSettingEntity;
 import zjtech.piczz.gs.GlobalSettingService;
@@ -55,7 +52,7 @@ public class DownloadUtil {
         "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36");
 
     try (BufferedInputStream bis = new BufferedInputStream(connection.getInputStream());
-         FileOutputStream fis = new FileOutputStream(filePath)) {
+        FileOutputStream fis = new FileOutputStream(filePath)) {
       byte[] buffer = new byte[2048];
       int count = 0;
       while ((count = bis.read(buffer, 0, 2048)) != -1) {
@@ -71,7 +68,7 @@ public class DownloadUtil {
     return Files.exists(strPath);
   }
 
-  private Path getBookPath(String bookName, GlobalSettingEntity settingEntity) {
+  public Path getBookPath(String bookName, GlobalSettingEntity settingEntity) {
     String storagePath = settingEntity.getStorageDirectory();
     if (!storagePath.endsWith("/")) {
       storagePath += "/";
@@ -80,7 +77,7 @@ public class DownloadUtil {
     return Paths.get(folderName);
   }
 
-  private Path getBookPath(String bookName) {
+  public Path getBookPath(String bookName) {
     return getBookPath(bookName, settingService.getOne().get());
   }
 

@@ -8,11 +8,22 @@
 package zjtech.piczz.downloadbook;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
-import javax.persistence.*;
-
+import java.util.stream.Stream;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -73,6 +84,7 @@ public class SingleBookEntity {
     PARSED("Parsed"),
     IGNORED("Ignored"),
     DWONLOADING("Dwonloading"),
+    INCOMPLETE("Incomplete"),
     COMPLETED("Completed");
 
     private String value;
@@ -84,6 +96,14 @@ public class SingleBookEntity {
     public String value() {
       return value;
     }
+
+    public static StatusEnum of(String value) {
+      Optional<StatusEnum> optional = Stream.of(StatusEnum.values())
+          .filter(statusEnum -> statusEnum.value().equals(value)).findFirst();
+
+      return optional.get();
+    }
+
   }
 }
 

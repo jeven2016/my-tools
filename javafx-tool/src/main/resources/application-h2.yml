@@ -9,9 +9,8 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
       max-lifetime: 1800000
-      maximum-pool-size: 15
+      maximum-pool-size: 30
       minimum-idle: 5
-      connection-test-query: select 1
       connection-timeout: 30000
       pool-name: hikariPool
     continue-on-error: true # Do not stop if an error occurs while initializing the database

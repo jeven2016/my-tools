@@ -7,11 +7,15 @@
 
 package zjtech.piczz.downloadbook;
 
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javafx.collections.FXCollections;
@@ -19,6 +23,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -49,6 +54,7 @@ import zjtech.modules.utils.InfoUtils;
 import zjtech.modules.utils.InfoUtils.InfoType;
 import zjtech.piczz.common.DownloadConstants;
 import zjtech.piczz.downloadbook.SingleBookEntity.StatusEnum;
+import zjtech.piczz.downloadbook.threadpool.DownloadUtil;
 
 @Component
 @Slf4j
@@ -78,6 +84,9 @@ public class DownloadBookController extends AbstractController {
   private final Job job;
 
   @FXML
+  public ChoiceBox filterBox;
+
+  @FXML
   private TextFlow infoArea;
 
   private final InfoUtils infoUtils;
@@ -86,13 +95,20 @@ public class DownloadBookController extends AbstractController {
 
   private final PicRep picRep;
 
+
+  private final DownloadUtil downloadUtil;
+
+  private static final String FILTER_ALL = "All";
+  private String currentFilterType = FILTER_ALL;
+
   @Autowired
   public DownloadBookController(ApplicationContext applicationContext, DialogUtils dialogUtils,
                                 BookService bookService,
                                 @Qualifier("asyncJobLauncher") JobLauncher jobLauncher,
                                 @Qualifier("downloadSingleBookJob") Job job,
                                 InfoUtils infoUtils, PicRep picRep,
-                                EhcacheUtil ehcacheUtil) {
+                                EhcacheUtil ehcacheUtil,
+                                DownloadUtil downloadUtil) {
     this.applicationContext = applicationContext;
     this.dialogUtils = dialogUtils;
     this.bookService = bookService;
@@ -101,6 +117,7 @@ public class DownloadBookController extends AbstractController {
     this.infoUtils = infoUtils;
     this.picRep = picRep;
     this.ehcacheUtil = ehcacheUtil;
+    this.downloadUtil = downloadUtil;
   }
 
 
@@ -159,22 +176,53 @@ public class DownloadBookController extends AbstractController {
 
   }
 
+  public void deleteAllBooks() {
+    Optional<ButtonType> opt = dialogUtils.confirm(getResource("confirm.book.delete.all.title"),
+        getResource("confirm.book.delete.all.content"));
+    if (opt.isPresent() && opt.get() == ButtonType.OK) {
+      String msg = "success.book.delete.all.books";
+      InfoType type = InfoType.SUCCESS;
+      try {
+        bookService.deleteAll();
+      } catch (Exception e) {
+        msg = "error.book.deletion.all.failed";
+        type = InfoType.FAILURE;
+      }
+      infoUtils.showInfo(infoArea, type, new Text(getResource(msg)));
+    }
+  }
+
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+    List<String> items = Stream.of(StatusEnum.values()).map(StatusEnum::value)
+        .collect(Collectors.toList());
+    filterBox.getItems().addAll(FXCollections.observableArrayList(items));
+    currentFilterType = "All";
     refresh();
   }
 
   public void refresh() {
-    List<SingleBookEntity> list = bookService.findAll();
-    ObservableList<SingleBookEntity> observableList = FXCollections.observableArrayList(list);
-    tableView.setItems(observableList);
-    log.info("refresh the list of books");
+    this.refershByStatus(currentFilterType);
   }
 
   public void triggerAdd(KeyEvent keyEvent) {
     if (keyEvent.getCode().equals(KeyCode.ENTER)) {
       this.addBook();
     }
+  }
+
+  private void refershByStatus(String status) {
+    List<SingleBookEntity> list;
+    if (status.equals(FILTER_ALL)) {
+      list = bookService.findAll();
+    } else {
+      StatusEnum statusEnum = StatusEnum.of(status);
+      list = bookService.findByStatus(Stream.of(statusEnum));
+    }
+    ObservableList<SingleBookEntity> observableList = FXCollections.observableArrayList(list);
+    tableView.setItems(observableList);
+    log.info("refresh the list of books");
+
   }
 
   /**
@@ -332,4 +380,36 @@ public class DownloadBookController extends AbstractController {
         new Text(getResource("success.book.delete.all.pictures")));
   }
 
+  public void filterByStatus() {
+    String value = filterBox.getSelectionModel().getSelectedItem().toString();
+    currentFilterType = value;
+    log.info("current filter type is {}", value);
+    this.refresh();
+  }
+
+  public void validateBooks() {
+    List<SingleBookEntity> bookEntityList = bookService
+        .findByStatus(Stream.of(StatusEnum.PARSED, StatusEnum.PARSING, StatusEnum.COMPLETED));
+    bookEntityList.forEach(book -> {
+      int picCount = book.getPicCount();
+      Path bookPath = downloadUtil.getBookPath(book.getName());
+
+      try {
+        int fileCount = (int) Files.list(bookPath).count();
+        if (picCount == fileCount) {
+          log.info("{}'s count is correct.", book.getName());
+          if (!StatusEnum.COMPLETED.equals(book.getStatus())) {
+            //correct the status
+            bookService.updateStatus(book.getId(), StatusEnum.COMPLETED);
+          }
+        } else {
+          //change the status to 'INCOMPLETE'
+          bookService.updateStatus(book.getId(), StatusEnum.INCOMPLETE);
+          log.warn("{}'s count is incorrect, will fix this issue latter.", book.getName());
+        }
+      } catch (IOException e) {
+        log.warn("failed to list the number of files in direct {}", bookPath.toAbsolutePath());
+      }
+    });
+  }
 }

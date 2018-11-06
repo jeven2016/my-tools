@@ -55,6 +55,11 @@ public class BookService {
     return bookRep.findAll();
   }
 
+  @Transactional
+  public void deleteAll(){
+    bookRep.deleteAll();
+  }
+
   public List<SingleBookEntity> findByStatus(Stream<StatusEnum> statusEnumStream) {
     return bookRep.findByStatusIn(statusEnumStream.collect(Collectors.toList()));
   }
