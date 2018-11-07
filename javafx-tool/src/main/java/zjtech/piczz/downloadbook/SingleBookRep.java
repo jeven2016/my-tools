@@ -9,7 +9,7 @@ package zjtech.piczz.downloadbook;
 
 import java.util.Collection;
 import java.util.List;
-
+import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -34,4 +34,7 @@ public interface SingleBookRep extends JpaRepository<SingleBookEntity, Long> {
   @Modifying
   @Query("update SingleBookEntity b set b.status=?2 where b.id=?1")
   int updatestatus(Long id, StatusEnum statusEnum);
+
+  @EntityGraph(value = "book.all", type = EntityGraph.EntityGraphType.FETCH)
+  SingleBookEntity findByName(String name);
 }

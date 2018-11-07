@@ -31,7 +31,7 @@ public class PiczzBatchConfig {
   public TaskExecutor customTaskExecutor() {
     ThreadPoolTaskExecutor threadPool = new ThreadPoolTaskExecutor();
     threadPool.setCorePoolSize(threadPoolCount);
-    threadPool.setMaxPoolSize(10);
+    threadPool.setMaxPoolSize(threadPoolCount);
     threadPool.afterPropertiesSet();
     return threadPool;
   }

@@ -14,4 +14,4 @@ spring:
 
 
 task:
-  thread-pool: 10
+  thread-pool: 3 # 3 task thread running for performance considering

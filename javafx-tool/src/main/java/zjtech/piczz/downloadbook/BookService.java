@@ -12,11 +12,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import zjtech.modules.common.ToolException;
@@ -56,14 +53,19 @@ public class BookService {
   }
 
   @Transactional
-  public void deleteAll(){
-    bookRep.deleteAll();
+  public void deleteAll() {
+    bookRep.deleteAllInBatch();
   }
 
   public List<SingleBookEntity> findByStatus(Stream<StatusEnum> statusEnumStream) {
     return bookRep.findByStatusIn(statusEnumStream.collect(Collectors.toList()));
   }
 
+  public SingleBookEntity findByName(String name) {
+    return bookRep.findByName(name);
+  }
+
+  @Transactional
   public int updateStatus(long id, StatusEnum statusEnum) {
     return bookRep.updatestatus(id, statusEnum);
   }

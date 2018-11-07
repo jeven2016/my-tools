@@ -5,7 +5,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.List;
+import java.util.Set;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -71,8 +71,8 @@ public class ImportController extends AbstractController {
     XmlMapper xmlMapper = new XmlMapper();
     File outputFile = new File(fileInput.getText());
 
-    List<SingleBookEntity> list = xmlMapper
-        .readValue(outputFile, new TypeReference<List<SingleBookEntity>>() {
+    Set<SingleBookEntity> list = xmlMapper
+        .readValue(outputFile, new TypeReference<Set<SingleBookEntity>>() {
         });
     bookService.saveList(list);
     Text text = new Text(getResource("success.book.import"));

@@ -28,7 +28,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<TitledPane styleClass="info" stylesheets="@../../skin/bootstrap3.css" text="Download Book" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zjtech.piczz.downloadbook.DownloadBookController">
+<TitledPane styleClass="info" stylesheets="@../../skin/bootstrap3.css" text="Download Book" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zjtech.piczz.downloadbook.DownloadBookController">
 
   <AnchorPane prefHeight="0.0" prefWidth="573.0">
     <children>
@@ -120,6 +120,7 @@
           <MenuButton mnemonicParsing="false" styleClass="action-btn,middle,danger" text="Delete">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#delete" text="Delete Book" />
+              <MenuItem mnemonicParsing="false" onAction="#deleteAllBooks" text="Delete All Books" />
               <MenuItem mnemonicParsing="false" onAction="#deleteAllPictures" text="Delete All Pictures" />
             </items>
             <HBox.margin>
@@ -141,15 +142,21 @@
               <String fx:value="success" />
             </styleClass>
           </Button>
-          <Button mnemonicParsing="false" onAction="#validateBooks" text="Validate">
+          <MenuButton fx:id="validateMenuBtn" mnemonicParsing="false" styleClass="action-btn,middle,info" text="Validate">
             <HBox.margin>
               <Insets right="20.0" />
             </HBox.margin>
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#validateBooks" text="Validate From DB" />
+              <MenuItem mnemonicParsing="false" onAction="#validateDownloadedBooks" text="Validate from local directory"
+              fx:id="validateDirItem">
+              </MenuItem>
+            </items>
             <styleClass>
               <String fx:value="action-btn" />
               <String fx:value="success" />
             </styleClass>
-          </Button>
+          </MenuButton>
         </children>
       </HBox>
       <AnchorPane layoutX="20.0" layoutY="505.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="42.399999999999864">
@@ -160,16 +167,21 @@
       </AnchorPane>
       <HBox alignment="CENTER" layoutX="10.0" layoutY="68.0">
         <children>
-          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Filter:" wrappingWidth="40.4072265625">
+          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Filter:" wrappingWidth="40.0">
             <font>
               <Font size="14.0" />
             </font>
           </Text>
-          <ChoiceBox layoutX="54.0" layoutY="45.0" prefWidth="150.0" value="All" fx:id="filterBox" onAction="#filterByStatus">
-            <String fx:value="All"/>
+          <ChoiceBox fx:id="filterBox" layoutX="54.0" layoutY="45.0" onAction="#filterByStatus" prefWidth="150.0" value="All">
+            <String fx:value="All" />
           </ChoiceBox>
         </children>
       </HBox>
+         <Text layoutX="869.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="All:" />
+         <Text fill="#3167d3" layoutX="898.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" fx:id="pageSizeText">
+            <font>
+               <Font name="System Bold" size="13.0" />
+            </font></Text>
     </children>
   </AnchorPane>
 

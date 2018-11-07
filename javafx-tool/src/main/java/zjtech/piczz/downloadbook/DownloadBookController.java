@@ -7,17 +7,23 @@
 
 package zjtech.piczz.downloadbook;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -25,8 +31,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
@@ -55,6 +64,8 @@ import zjtech.modules.utils.InfoUtils.InfoType;
 import zjtech.piczz.common.DownloadConstants;
 import zjtech.piczz.downloadbook.SingleBookEntity.StatusEnum;
 import zjtech.piczz.downloadbook.threadpool.DownloadUtil;
+import zjtech.piczz.gs.GlobalSettingEntity;
+import zjtech.piczz.gs.GlobalSettingService;
 
 @Component
 @Slf4j
@@ -87,6 +98,15 @@ public class DownloadBookController extends AbstractController {
   public ChoiceBox filterBox;
 
   @FXML
+  public Text pageSizeText;
+
+  @FXML
+  public MenuItem validateDirItem;
+
+  @FXML
+  public MenuButton validateMenuBtn;
+
+  @FXML
   private TextFlow infoArea;
 
   private final InfoUtils infoUtils;
@@ -101,14 +121,18 @@ public class DownloadBookController extends AbstractController {
   private static final String FILTER_ALL = "All";
   private String currentFilterType = FILTER_ALL;
 
+
+  private GlobalSettingService globalSettingService;
+
   @Autowired
   public DownloadBookController(ApplicationContext applicationContext, DialogUtils dialogUtils,
-                                BookService bookService,
-                                @Qualifier("asyncJobLauncher") JobLauncher jobLauncher,
-                                @Qualifier("downloadSingleBookJob") Job job,
-                                InfoUtils infoUtils, PicRep picRep,
-                                EhcacheUtil ehcacheUtil,
-                                DownloadUtil downloadUtil) {
+      BookService bookService,
+      @Qualifier("asyncJobLauncher") JobLauncher jobLauncher,
+      @Qualifier("downloadSingleBookJob") Job job,
+      InfoUtils infoUtils, PicRep picRep,
+      EhcacheUtil ehcacheUtil,
+      DownloadUtil downloadUtil,
+      GlobalSettingService globalSettingService) {
     this.applicationContext = applicationContext;
     this.dialogUtils = dialogUtils;
     this.bookService = bookService;
@@ -118,6 +142,7 @@ public class DownloadBookController extends AbstractController {
     this.picRep = picRep;
     this.ehcacheUtil = ehcacheUtil;
     this.downloadUtil = downloadUtil;
+    this.globalSettingService = globalSettingService;
   }
 
 
@@ -189,6 +214,7 @@ public class DownloadBookController extends AbstractController {
         type = InfoType.FAILURE;
       }
       infoUtils.showInfo(infoArea, type, new Text(getResource(msg)));
+      refresh();
     }
   }
 
@@ -198,6 +224,10 @@ public class DownloadBookController extends AbstractController {
         .collect(Collectors.toList());
     filterBox.getItems().addAll(FXCollections.observableArrayList(items));
     currentFilterType = "All";
+
+    Tooltip tooltip = new Tooltip(
+        "Validate From Directory: check the local directory and validate the pictures count is valid");
+    Tooltip.install(validateMenuBtn, tooltip);
     refresh();
   }
 
@@ -221,8 +251,8 @@ public class DownloadBookController extends AbstractController {
     }
     ObservableList<SingleBookEntity> observableList = FXCollections.observableArrayList(list);
     tableView.setItems(observableList);
+    pageSizeText.setText(list.size() + "");
     log.info("refresh the list of books");
-
   }
 
   /**
@@ -292,7 +322,8 @@ public class DownloadBookController extends AbstractController {
 
     if (buttonTypeOpt.isPresent() && buttonTypeOpt.get() == ButtonType.OK) {
       List<SingleBookEntity> bookEntities = bookService
-          .findByStatus(Stream.of(StatusEnum.FAILED, StatusEnum.NEW_ADDED));
+          .findByStatus(Stream
+              .of(StatusEnum.FAILED, StatusEnum.NEW_ADDED, StatusEnum.PARSING, StatusEnum.PARSED));
 
       if (bookEntities.isEmpty()) {
         log.warn("No books got be downloaded and the book list size is {}", bookEntities.size());
@@ -348,7 +379,10 @@ public class DownloadBookController extends AbstractController {
 
     controller.setWindow(window);
     controller.setInfoArea(infoArea);
-    window.setOnCloseRequest(event -> window.hide());
+    window.setOnCloseRequest(event -> {
+      window.hide();
+      refresh();
+    });
     dialog.showAndWait();
   }
 
@@ -370,7 +404,10 @@ public class DownloadBookController extends AbstractController {
     NoArgCallback callback = this::refresh;
     controller.setCallback(callback);
 
-    window.setOnCloseRequest(event -> window.hide());
+    window.setOnCloseRequest(event -> {
+      window.hide();
+      refresh();
+    });
     dialog.showAndWait();
   }
 
@@ -387,29 +424,87 @@ public class DownloadBookController extends AbstractController {
     this.refresh();
   }
 
+  public void validateDownloadedBooks() {
+    Optional<GlobalSettingEntity> optional = globalSettingService.getOne();
+    if (!optional.isPresent()) {
+      log.warn("No global setting exists.");
+      return;
+    }
+
+    GlobalSettingEntity globalSettingEntity = optional.get();
+    Path path = Paths.get(globalSettingEntity.getStorageDirectory());
+    List<String> booksNotFound = new ArrayList<>();
+    String bookName = "";
+    try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path)) {
+      for (Path bookPath : directoryStream) {
+        File directory = bookPath.toFile();
+        if (directory.isDirectory()) {
+          bookName = bookPath.getFileName().toString();
+          log.info("the book name is {}", bookName);
+          log.info("file count is {}", directory.listFiles().length);
+
+          SingleBookEntity bookEntity = bookService.findByName(bookName);
+          if (bookEntity == null) {
+            booksNotFound.add(bookName);
+            log.warn("Book {} is not found in db", bookName);
+            continue;
+          }
+          updateStatus(bookEntity, (int) (directory.listFiles().length), bookPath);
+        }
+      }
+    } catch (Exception e) {
+      log.warn("Cannot validate the books downloaded. the last book is {}", bookName, e);
+    }
+
+    try (BufferedWriter bufferedWriter = Files
+        .newBufferedWriter(Paths.get("books_not_found.txt"), StandardOpenOption.APPEND,
+            StandardOpenOption.CREATE);
+        PrintWriter printWriter = new PrintWriter(bufferedWriter)) {
+      booksNotFound.forEach(printWriter::print);
+      printWriter.flush();
+    } catch (IOException e) {
+      log.warn("Cannot append the books into not found list.", e);
+    }
+    refresh();
+  }
+
+
   public void validateBooks() {
     List<SingleBookEntity> bookEntityList = bookService
         .findByStatus(Stream.of(StatusEnum.PARSED, StatusEnum.PARSING, StatusEnum.COMPLETED));
     bookEntityList.forEach(book -> {
-      int picCount = book.getPicCount();
       Path bookPath = downloadUtil.getBookPath(book.getName());
-
+      if(!bookPath.toFile().exists()){
+        return;
+      }
       try {
         int fileCount = (int) Files.list(bookPath).count();
-        if (picCount == fileCount) {
-          log.info("{}'s count is correct.", book.getName());
-          if (!StatusEnum.COMPLETED.equals(book.getStatus())) {
-            //correct the status
-            bookService.updateStatus(book.getId(), StatusEnum.COMPLETED);
-          }
-        } else {
-          //change the status to 'INCOMPLETE'
-          bookService.updateStatus(book.getId(), StatusEnum.INCOMPLETE);
-          log.warn("{}'s count is incorrect, will fix this issue latter.", book.getName());
-        }
+        updateStatus(book, fileCount, bookPath);
       } catch (IOException e) {
-        log.warn("failed to list the number of files in direct {}", bookPath.toAbsolutePath());
+        log.warn("failed to validate books", e);
       }
     });
+    refresh();
+  }
+
+  private void updateStatus(SingleBookEntity book, int fileCount, Path bookPath) {
+    try {
+      int picCount = book.getPicCount();
+      if (picCount == 0 || picCount != fileCount) {
+        //not started
+        bookService.updateStatus(book.getId(), StatusEnum.INCOMPLETE);
+        log.warn("{}'s count is incorrect, will fix this issue latter.", book.getName());
+        return;
+      }
+
+      log.info("{}'s count is correct.", book.getName());
+      if (!StatusEnum.COMPLETED.equals(book.getStatus())) {
+        //correct the status
+        bookService.updateStatus(book.getId(), StatusEnum.COMPLETED);
+      }
+    } catch (Exception e) {
+      log.warn("failed to list the number of files in direct {}, exception={}",
+          bookPath.toAbsolutePath(), e.getMessage());
+    }
   }
 }
