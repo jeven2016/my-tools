@@ -2,6 +2,8 @@ package zjtech.piczz.downloadbook.jobs;
 
 import java.io.IOException;
 import java.util.Optional;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -30,8 +32,10 @@ public class BookPageParserTask implements Tasklet {
 
   private final BookService bookService;
 
+  private final ObjectMapper objectMapper =new ObjectMapper();
+
   @Autowired
-  public BookPageParserTask(GlobalSettingService globalSettingService, BookService bookService) {
+  public BookPageParserTask(GlobalSettingService globalSettingService, BookService bookService, ObjectMapper objectMapper) {
     this.globalSettingService = globalSettingService;
     this.bookService = bookService;
   }
@@ -107,6 +111,13 @@ public class BookPageParserTask implements Tasklet {
 
     //update the book entity in db
     singleBookEntity.setStatus(StatusEnum.PARSED);
-    return bookService.save(singleBookEntity);
+
+    SingleBookEntity newBookEntity = bookService.save(singleBookEntity);
+
+    if (newBookEntity == null) {
+      log.error("No book will be passed to download task, the origin book is \n {}",
+          objectMapper.writeValueAsString(singleBookEntity));
+    }
+    return newBookEntity;
   }
 }

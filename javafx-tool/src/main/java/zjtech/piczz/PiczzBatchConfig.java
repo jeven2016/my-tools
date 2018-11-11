@@ -1,6 +1,7 @@
 package zjtech.piczz;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.SimpleJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
@@ -34,6 +35,11 @@ public class PiczzBatchConfig {
     threadPool.setMaxPoolSize(threadPoolCount);
     threadPool.afterPropertiesSet();
     return threadPool;
+  }
+
+  @Bean
+  public ObjectMapper objectMapper() {
+    return new ObjectMapper();
   }
 
   /**

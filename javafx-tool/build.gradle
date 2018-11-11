@@ -8,6 +8,7 @@ dependencies {
   compile group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
   compile 'com.netflix.archaius:archaius-core:2.0.0-rc.7'
   compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
+  compile 'com.fasterxml.jackson.core:jackson-databind'
 
 //  compile 'de.jensd:fontawesomefx-emojione:2.2.7-2'
 //  compile 'de.jensd:fontawesomefx-fontawesome:4.7.0-5'

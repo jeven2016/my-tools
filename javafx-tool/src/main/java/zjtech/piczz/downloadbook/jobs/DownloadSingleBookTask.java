@@ -36,6 +36,9 @@ public class DownloadSingleBookTask implements Tasklet {
     SingleBookEntity singleBookEntity = (SingleBookEntity) chunkContext.getStepContext()
         .getStepExecution().getJobExecution()
         .getExecutionContext().get(DownloadConstants.SINGLE_BOOK_PARAM);
+    if(singleBookEntity == null){
+      log.error("No book entity passed to download task");
+    }
     bookService.updateStatus(singleBookEntity.getId(), StatusEnum.DWONLOADING);
     if (singleBookEntity == null) {
       log.warn("book entity is null and the task have to finish.");
