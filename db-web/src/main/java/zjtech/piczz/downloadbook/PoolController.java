@@ -2,7 +2,6 @@ package zjtech.piczz.downloadbook;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import javafx.event.ActionEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -32,7 +31,7 @@ public class PoolController extends AbstractController {
 
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  public Mono<Map<String, String>> refresh(ActionEvent actionEvent) {
+  public Mono<Map<String, String>> refresh() {
     int currentSize = pool.getPoolSize();
     int threadSize = pool.getThreadCount();
 

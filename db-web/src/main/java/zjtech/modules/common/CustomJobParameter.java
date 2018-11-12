@@ -1,8 +1,8 @@
 package zjtech.modules.common;
 
-import java.io.Serializable;
-import java.util.UUID;
 import org.springframework.batch.core.JobParameter;
+
+import java.util.UUID;
 
 /**
  * Cannot send object as JobParameter in spring batch need custom implementation
