@@ -151,6 +151,7 @@ public class DownloadBookController extends AbstractController {
    */
   public void addBook() {
     String link = bookUrlInput.getText();
+    bookUrlInput.clear();
     if (StringUtils.isEmpty(link)) {
       dialogUtils.alert(getResource("error.invalid.book.title"),
           getResource("error.invalid.book.content"));
@@ -158,8 +159,9 @@ public class DownloadBookController extends AbstractController {
       return;
     }
     SingleBookEntity singleBookEntity = new SingleBookEntity();
-    singleBookEntity.setUrl(link);
+    singleBookEntity.setUrl(link.trim());
     singleBookEntity.setStatus(StatusEnum.NEW_ADDED);
+
     try {
       bookService.save(singleBookEntity);
     } catch (ToolException e) {
@@ -169,7 +171,6 @@ public class DownloadBookController extends AbstractController {
       return;
     }
 
-    bookUrlInput.clear();
 
     String msg = String.format(getResource("success.book.add"), link);
     infoUtils.showInfo(infoArea, InfoType.SUCCESS, new Text(msg));
