@@ -20,8 +20,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import zjtech.modules.common.AbstractController;
 import zjtech.modules.common.DialogUtils;
+import zjtech.modules.common.ToolException;
 import zjtech.modules.utils.InfoUtils;
 
+import javax.tools.Tool;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -105,16 +107,21 @@ public class PageController extends AbstractController {
   }
 
   public void addBooks() {
-    list.forEach(book -> {
+    Iterator<SingleBookEntity> iterator = list.listIterator();
+    while (iterator.hasNext()) {
+      SingleBookEntity book = iterator.next();
       try {
         bookService.save(book);
-        list.remove(book);
+        iterator.remove();
         log.info("book[name={}, url={}] is inserted.", book.getName(), book.getUrl());
+      } catch (ToolException e) {
+        log.warn("book[name={}, url={}] is failed to insert, exception=duplicated",
+            book.getName(), book.getUrl());
       } catch (Exception e) {
         log.warn("book[name={}, url={}] is failed to insert, exception={}",
             book.getName(), book.getUrl(), e.getMessage());
       }
-    });
+    }
     bookSize.setText(list.size() + "");
     ObservableList<SingleBookEntity> observableList = FXCollections.observableArrayList(list);
     tableView.setItems(observableList);

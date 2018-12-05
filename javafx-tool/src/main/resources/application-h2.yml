@@ -22,6 +22,6 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
-        show_sql: true
+        show_sql: false
         use_sql_comments: false
         format_sql: false
