@@ -20,7 +20,7 @@ public class NavController extends AbstractController {
 
   private static final String GLOBAL_SETTING_BTN = "globalSettingBtn";
   private static final String DOWNLOAD_BTN = "downloadBtn";
-  private static final String LOG_BTN = "logBtn";
+  private static final String ADD_PAGE_BTN = "pageBtn";
 
   @Autowired
   private GlobalView globalView;
@@ -34,7 +34,14 @@ public class NavController extends AbstractController {
       case DOWNLOAD_BTN:
         showDownloadBookContent();
         break;
+      case ADD_PAGE_BTN:
+        showAddPageContent();
+        break;
     }
+  }
+
+  private void showAddPageContent() {
+    globalView.getContentPane().getChildren().setAll(loadParent(FxmlPath.addPage.value()));
   }
 
   private void showDownloadBookContent() {

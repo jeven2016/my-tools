@@ -46,9 +46,9 @@
         <String fx:value="action-btn"/>
       </styleClass>
     </ToggleButton>
-    <ToggleButton mnemonicParsing="false" onAction="#showContent" prefWidth="150" selected="false" text="Log"
+    <ToggleButton mnemonicParsing="false" onAction="#showContent" prefWidth="150" selected="false" text="Add Page"
       toggleGroup="$myToggleGroup"
-      fx:id="logBtn">
+      fx:id="pageBtn">
       <styleClass>
         <String fx:value="middle"/>
         <String fx:value="action-btn"/>

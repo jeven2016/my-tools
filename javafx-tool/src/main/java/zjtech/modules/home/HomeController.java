@@ -37,10 +37,6 @@ public class HomeController extends AbstractController {
   @FXML
   private AnchorPane contentPane;
 
-  @FXML
-  private TextArea textArea;
-
-
   @Autowired
   public HomeController(GlobalView globalView) {
     this.globalView = globalView;
@@ -53,20 +49,19 @@ public class HomeController extends AbstractController {
 
     //add context menu for textarea
     ContextMenu contextMenu = getContextMenu();
-    textArea.setContextMenu(contextMenu);
 
     //register the appender to show log in GUI
     Platform.runLater(() -> {
-      TextAreaOutputStream stream = new TextAreaOutputStream(textArea);
+//      TextAreaOutputStream stream = new TextAreaOutputStream(textArea);
 
-      TextAreaOutputStreamAppender.setStaticOutputStream(stream);
+//      TextAreaOutputStreamAppender.setStaticOutputStream(stream);
     });
   }
 
   private ContextMenu getContextMenu() {
     MenuItem clearItem = new MenuItem("Clear");
     clearItem.setOnAction(event -> {
-      textArea.clear();
+//      textArea.clear();
     });
 
     ContextMenu contextMenu = new ContextMenu();

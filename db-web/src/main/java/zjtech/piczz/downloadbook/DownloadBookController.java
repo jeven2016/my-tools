@@ -24,6 +24,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
+
+import javafx.event.ActionEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
@@ -337,5 +339,10 @@ public class DownloadBookController extends AbstractController {
       log.warn("failed to list the number of files in direct {}, exception={}",
           bookPath.toAbsolutePath(), e.getMessage());
     }
+  }
+
+  public void addPage(ActionEvent actionEvent) {
+
+
   }
 }

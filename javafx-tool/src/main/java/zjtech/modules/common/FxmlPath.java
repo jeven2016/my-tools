@@ -14,6 +14,7 @@ public enum FxmlPath {
   picNav("/fxml/pic/nav.fxml"),
   globalSetting("/fxml/pic/global_setting.fxml"),
   downloadBook("/fxml/pic/download_book.fxml"),
+  addPage("/fxml/pic/add_page.fxml"),
   importDialog("/fxml/pic/import_dialog.fxml"),
   exportDialog("/fxml/pic/export_dialog.fxml"),
   poolInfoDialog("/fxml/pic/show_pool.fxml");

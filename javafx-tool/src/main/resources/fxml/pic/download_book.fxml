@@ -148,8 +148,7 @@
             </HBox.margin>
             <items>
               <MenuItem mnemonicParsing="false" onAction="#validateBooks" text="Validate From DB" />
-              <MenuItem mnemonicParsing="false" onAction="#validateDownloadedBooks" text="Validate from local directory"
-              fx:id="validateDirItem">
+              <MenuItem fx:id="validateDirItem" mnemonicParsing="false" onAction="#validateDownloadedBooks" text="Validate from local directory">
               </MenuItem>
             </items>
             <styleClass>
@@ -165,20 +164,20 @@
           <Text text="You successfully read this important alert message." />
         </TextFlow>
       </AnchorPane>
-      <HBox alignment="CENTER" layoutX="10.0" layoutY="68.0">
+      <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="68.0" prefHeight="33.0" prefWidth="420.0">
         <children>
-          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Filter:" wrappingWidth="40.0">
+          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Filter:" wrappingWidth="59.0">
             <font>
               <Font size="14.0" />
             </font>
           </Text>
-          <ChoiceBox fx:id="filterBox" layoutX="54.0" layoutY="45.0" onAction="#filterByStatus" prefWidth="150.0" value="All">
+          <ChoiceBox fx:id="filterBox" layoutX="54.0" layoutY="45.0" onAction="#filterByStatus" prefWidth="204.0" value="All">
             <String fx:value="All" />
           </ChoiceBox>
         </children>
       </HBox>
          <Text layoutX="869.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="All:" />
-         <Text fill="#3167d3" layoutX="898.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" fx:id="pageSizeText">
+         <Text fx:id="pageSizeText" fill="#3167d3" layoutX="898.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0">
             <font>
                <Font name="System Bold" size="13.0" />
             </font></Text>
