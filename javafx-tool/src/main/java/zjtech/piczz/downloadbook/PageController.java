@@ -96,6 +96,7 @@ public class PageController extends AbstractController {
       SingleBookEntity singleBookEntity = new SingleBookEntity();
       singleBookEntity.setName(name);
       singleBookEntity.setUrl(url);
+      singleBookEntity.setStatus(SingleBookEntity.StatusEnum.NEW_ADDED);
       list.add(singleBookEntity);
     });
 
@@ -107,6 +108,8 @@ public class PageController extends AbstractController {
   }
 
   public void addBooks() {
+    bookService.fixNullStatus();
+
     Iterator<SingleBookEntity> iterator = list.listIterator();
     while (iterator.hasNext()) {
       SingleBookEntity book = iterator.next();

@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,4 +75,10 @@ public class BookService {
   public void delete(long id) {
     bookRep.deleteById(id);
   }
+
+  @Transactional
+  public void fixNullStatus() {
+    bookRep.updateNullStatus(StatusEnum.NEW_ADDED);
+  }
+
 }
