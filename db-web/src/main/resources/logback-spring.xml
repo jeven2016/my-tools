@@ -9,8 +9,13 @@
 
   <property name="CONSOLE_LOG_PATTERN" value="${FILE_LOG_PATTERN}"/>
 
+<<<<<<< HEAD
   <!--<property name="LOG_FILE" value="/var/log/${appName}"/>-->
 <!--
+=======
+  <property name="LOG_FILE" value="/var/log/${appName}"/>
+
+>>>>>>> a4733e468f8e522437f78e1105ea99d49cb70813
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <encoder>
       <pattern>${FILE_LOG_PATTERN}</pattern>
@@ -31,10 +36,18 @@
       <pattern>${CONSOLE_LOG_PATTERN}</pattern>
       <charset>utf8</charset>
     </encoder>
+<<<<<<< HEAD
   </appender>-->
 
   <root level="WARN">
     <!--<appender-ref ref="CONSOLE"/>-->
     <!--<appender-ref ref="FILE"/>-->
+=======
+  </appender>
+
+  <root level="WARN">
+    <appender-ref ref="CONSOLE"/>
+    <appender-ref ref="FILE"/>
+>>>>>>> a4733e468f8e522437f78e1105ea99d49cb70813
   </root>
 </configuration>

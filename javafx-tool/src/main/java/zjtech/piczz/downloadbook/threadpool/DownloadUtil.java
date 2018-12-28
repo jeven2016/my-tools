@@ -15,6 +15,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -49,10 +50,10 @@ public class DownloadUtil {
     connection.setRequestMethod("GET");
 //        connection.setConnectTimeout(5 * 1000);
     connection.setRequestProperty("User-Agent",
-        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36");
+       "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36");
 
     try (BufferedInputStream bis = new BufferedInputStream(connection.getInputStream());
-        FileOutputStream fis = new FileOutputStream(filePath)) {
+         FileOutputStream fis = new FileOutputStream(filePath)) {
       byte[] buffer = new byte[2048];
       int count = 0;
       while ((count = bis.read(buffer, 0, 2048)) != -1) {
@@ -96,7 +97,7 @@ public class DownloadUtil {
       //construct the file path
       String picType = url.substring(url.lastIndexOf("."));
       Path fileName = strPath.resolve(Paths.get(new StringBuilder().append(item.getSubPageNo())
-          .append("-").append(item.getPicIndexInfo()).append(picType).toString()));
+         .append("-").append(item.getPicIndexInfo()).append(picType).toString()));
 
       log.info("pic fileName=" + fileName);
       if (Files.exists(fileName)) {

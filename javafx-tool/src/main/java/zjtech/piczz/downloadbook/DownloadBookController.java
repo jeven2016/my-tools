@@ -7,37 +7,10 @@
 
 package zjtech.piczz.downloadbook;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.URL;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
@@ -45,7 +18,6 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Window;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParameter;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
@@ -54,13 +26,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import zjtech.modules.common.AbstractController;
-import zjtech.modules.common.CustomJobParameter;
-import zjtech.modules.common.DialogUtils;
-import zjtech.modules.common.FxmlPath;
-import zjtech.modules.common.LoaderEntity;
-import zjtech.modules.common.NoArgCallback;
-import zjtech.modules.common.ToolException;
+import zjtech.modules.common.*;
 import zjtech.modules.common.cache.EhcacheUtil;
 import zjtech.modules.utils.InfoUtils;
 import zjtech.modules.utils.InfoUtils.InfoType;
@@ -69,6 +35,20 @@ import zjtech.piczz.downloadbook.SingleBookEntity.StatusEnum;
 import zjtech.piczz.downloadbook.threadpool.DownloadUtil;
 import zjtech.piczz.gs.GlobalSettingEntity;
 import zjtech.piczz.gs.GlobalSettingService;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URL;
+import java.nio.file.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static zjtech.piczz.common.DownloadConstants.SAVE_PIC;
 import static zjtech.piczz.common.DownloadConstants.UPDATE_STATUS;
@@ -572,7 +552,7 @@ public class DownloadBookController extends AbstractController {
   public void validateUncompletedBooks() {
     List<SingleBookEntity> bookEntityList = bookService
        .findByStatus(Stream.of(StatusEnum.PARSED, StatusEnum.PARSING,
-          StatusEnum.INCOMPLETE, StatusEnum.NEW_ADDED,StatusEnum.INCOMPLETE));
+          StatusEnum.INCOMPLETE, StatusEnum.NEW_ADDED, StatusEnum.INCOMPLETE));
     bookEntityList.forEach(book -> {
       Path bookPath = downloadUtil.getBookPath(book.getName());
       if (!bookPath.toFile().exists()) {

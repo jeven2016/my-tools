@@ -311,6 +311,7 @@ public class DownloadBookController extends AbstractController {
       if (!bookPath.toFile().exists()) {
         return;
       }
+
       try {
         int fileCount = (int) Files.list(bookPath).count();
         updateStatus(book, fileCount, bookPath);
