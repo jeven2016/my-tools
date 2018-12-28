@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+  xmlns='http://www.ehcache.org/v3'
+  xsi:schemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core.xs">
+
+  <cache alias="globalSetting" uses-template="defaultCacheTemplate">
+    <resources>
+      <!--3、can store 10 objects。-->
+      <heap unit="entries">1</heap>
+      <!--4、500 MB的外堆内存-->
+      <!--<offheap unit="MB">500</offheap>-->
+    </resources>
+  </cache>
+
+  <cache alias="books" uses-template="defaultCacheTemplate">
+  </cache>
+
+  <cache-template name="defaultCacheTemplate">
+    <key-type>java.lang.String</key-type>
+    <value-type>java.lang.Object</value-type>
+    <expiry>
+      <!--tti： time to idle, 最大空闲时间 -->
+      <!-- <ttl>, time to live; 最大存活时间 -->
+      <tti unit="minutes">2</tti>
+    </expiry>
+    <resources>
+      <heap unit="entries">100000</heap>
+    </resources>
+  </cache-template>
+
+</config>

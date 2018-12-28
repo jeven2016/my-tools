@@ -1,0 +1,35 @@
+<!--
+  ~ Copyright (c) 2018 Zjtech. All rights reserved.
+  ~ This material is the confidential property of Zjtech or its
+  ~ licensors and may be used, reproduced, stored or transmitted only in
+  ~ accordance with a valid MIT license or sublicense agreement.
+  -->
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="
+
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <!-- 事务管理器 -->
+  <bean class="org.springframework.batch.support.transaction.ResourcelessTransactionManager"
+    id="transactionManager"/>
+
+  <!-- 任务仓库 -->
+  <bean class="org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean"
+    id="jobRepository">
+    <property name="transactionManager" ref="transactionManager"/>
+  </bean>
+
+  <!-- 任务加载器 -->
+  <bean class="org.springframework.batch.core.launch.support.SimpleJobLauncher" id="jobLauncher">
+    <property name="jobRepository" ref="jobRepository"/>
+
+    <!-- Enable AsyncTaskExecutor -->
+    <property name="taskExecutor">
+      <bean class="org.springframework.core.task.SimpleAsyncTaskExecutor"/>
+    </property>
+  </bean>
+
+</beans>

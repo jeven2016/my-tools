@@ -1,0 +1,17 @@
+login:
+  username: root
+  password: 1
+
+server:
+  port: ${server_port:5801}
+
+spring:
+  application:
+    name: db-web
+  profiles:
+    include: batch, h2, cache
+
+# Set log level
+logging:
+  level:
+    root: INFO

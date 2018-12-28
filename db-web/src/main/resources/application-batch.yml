@@ -1,0 +1,17 @@
+spring:
+  batch:
+    #Initialize a Spring Batch Database
+    initialize-schema: always
+
+    # Execute Spring Batch Jobs on Startup
+    job:
+      names:
+      #With this change, the batch job will
+      #not automatically execute with the start of Spring Boot.
+      #And batch job will be triggered when specific link.
+      enabled: false
+    table-prefix: BATCH_
+
+
+task:
+  thread-pool: 3 # 3 task thread running for performance considering
