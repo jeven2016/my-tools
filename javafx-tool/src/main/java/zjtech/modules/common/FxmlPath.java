@@ -11,6 +11,9 @@ public enum FxmlPath {
   login("/fxml/login.fxml"),
   home("/fxml/home.fxml"),
 
+  webNav("/fxml/web/nav.fxml"),
+  webSocketNav("/fxml/web/ws_client.fxml"),
+
   picNav("/fxml/pic/nav.fxml"),
   globalSetting("/fxml/pic/global_setting.fxml"),
   downloadBook("/fxml/pic/download_book.fxml"),

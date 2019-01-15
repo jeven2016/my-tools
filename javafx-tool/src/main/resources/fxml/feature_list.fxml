@@ -25,7 +25,7 @@
       <String fx:value="first"/>
     </styleClass>
   </Button>
-  <Button mnemonicParsing="false" onAction="#click" text="middle" fx:id="middleBtn">
+  <Button mnemonicParsing="false" onAction="#click" text="Web" fx:id="middleBtn">
     <styleClass>
       <String fx:value="default"/>
       <String fx:value="middle"/>

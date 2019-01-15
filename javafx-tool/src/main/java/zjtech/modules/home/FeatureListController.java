@@ -9,6 +9,7 @@ package zjtech.modules.home;
 
 import java.util.List;
 import java.util.stream.Stream;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -66,7 +67,8 @@ public class FeatureListController extends AbstractController {
         showPicPane();
         break;
       case MIDDLE_BTN:
-        showMiddlePane();
+        //web test tool
+        showWebPanel();
         break;
     }
   }
@@ -77,9 +79,10 @@ public class FeatureListController extends AbstractController {
     navPane.getChildren().setAll((AnchorPane) parent);
   }
 
-  private void showMiddlePane() {
+  private void showWebPanel() {
     Pane navPane = globalView.getNavPane();
-    navPane.getChildren().removeAll();
+    Parent parent = loadParent(FxmlPath.webNav.value());
+    navPane.getChildren().setAll((AnchorPane) parent);
   }
 
 }
