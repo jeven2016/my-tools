@@ -80,11 +80,11 @@ public class PageController extends AbstractController {
     Document doc = Jsoup.connect(link).timeout(30000).get();
 
     // find the books
-    Elements books = doc.getElementsByClass("post_box");
+    Elements books = doc.getElementsByClass("grid-title");
 
     books.forEach(book -> {
       //get title link
-      Elements elements = book.select(".tit a[rel=bookmark]");
+      Elements elements = book.select("a[rel=bookmark]");
       if (elements.size() > 1) {
         throw new IllegalStateException("invlid bookmark found");
       }
@@ -93,11 +93,17 @@ public class PageController extends AbstractController {
       String name = element.text();
       String url = element.attr("href");
 
-      SingleBookEntity singleBookEntity = new SingleBookEntity();
-      singleBookEntity.setName(name);
-      singleBookEntity.setUrl(url);
-      singleBookEntity.setStatus(SingleBookEntity.StatusEnum.NEW_ADDED);
-      list.add(singleBookEntity);
+      for (String exName : getExcludedNames()) {
+        if (!name.contains(exName.trim()) && !url.contains(exName.trim())) {
+          SingleBookEntity singleBookEntity = new SingleBookEntity();
+          singleBookEntity.setName(name);
+          singleBookEntity.setUrl(url);
+          singleBookEntity.setStatus(SingleBookEntity.StatusEnum.NEW_ADDED);
+          list.add(singleBookEntity);
+        }
+      }
+
+
     });
 
     bookSize.setText(list.size() + "");
@@ -136,16 +142,24 @@ public class PageController extends AbstractController {
     }
   }
 
+  private String[] getExcludedNames() {
+    String link = excludedBookField.getText();
+    excludedBookField.clear();
+    if (StringUtils.isEmpty(link)) {
+      return new String[0];
+    }
+    String[] excludeNames = {link};
+    if (link.contains(",")) {
+      excludeNames = link.split(",");
+    }
+    return excludeNames;
+  }
+
   public void addExcludedBook(KeyEvent keyEvent) {
     if (!keyEvent.getCode().equals(KeyCode.ENTER)) {
       return;
     }
     String link = excludedBookField.getText();
-    excludedBookField.clear();
-    if (StringUtils.isEmpty(link)) {
-      return;
-    }
-
     Iterator<SingleBookEntity> iterator = list.iterator();
     boolean excluded = false;
     String name = null, url = null;
@@ -153,11 +167,15 @@ public class PageController extends AbstractController {
       SingleBookEntity bookEntity = (SingleBookEntity) iterator.next();
       name = bookEntity.getName();
       url = bookEntity.getUrl();
-      if (name.contains(link) || url.contains(link.trim())) {
-        iterator.remove();
-        excluded = true;
-        break;
+
+      for (String exName : getExcludedNames()) {
+        if (name.contains(exName.trim()) || url.contains(exName.trim())) {
+          iterator.remove();
+          excluded = true;
+          break;
+        }
       }
+
     }
 
     if (excluded) {

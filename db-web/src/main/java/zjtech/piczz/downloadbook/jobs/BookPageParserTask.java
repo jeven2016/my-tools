@@ -14,6 +14,7 @@ import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import zjtech.piczz.common.DownloadConstants;
 import zjtech.piczz.downloadbook.BookService;
 import zjtech.piczz.downloadbook.SingleBookEntity;
@@ -70,8 +71,17 @@ public class BookPageParserTask implements Tasklet {
 
     // find the sub page count
     Document document = Jsoup.connect(singleBookEntity.getUrl()).timeout(timeout).get();
-    Elements elements = document.select(".wp-pagenavi a:nth-last-child(2)");
+    Elements elements = document.select(".page-links a:nth-last-child(2)");
     String href = elements.first().attr("href");
+
+    if (StringUtils.isEmpty(href)) {
+      log.error("Cannot get the link of book: " + singleBookEntity.getName());
+      return singleBookEntity;
+    }
+
+    if (href.endsWith("/")) {
+      href = href.substring(0, href.lastIndexOf("/"));
+    }
 
     int splitIndex = href.lastIndexOf("/");
     String prefix = href.substring(0, splitIndex);
