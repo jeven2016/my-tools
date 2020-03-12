@@ -1,0 +1,59 @@
+GET http://super666.cn:5801/pool
+Accept: */*
+Cache-Control: no-cache
+
+###
+
+### 从当前目录导入exportedBooks2.xml
+GET http://super666.cn:5801/import
+Accept: */*
+Cache-Control: no-cache
+
+###
+
+### 从当前目录导入exportedBooks2.xml
+GET http://super666.cn:5801/export
+Accept: */*
+Cache-Control: no-cache
+
+###
+
+GET http://super666.cn:5801/global
+Accept: */*
+Cache-Control: no-cache
+
+<> 2020-03-12T024801.200.json
+
+###
+
+### Send POST request with json body
+POST http://super666.cn:5801/global
+Content-Type: application/json
+
+{
+  "homeUrl": "http://www.177pic.pw/",
+  "downloadThreadCount": 6,
+  "storageDirectory": "/home/ubuntu/pic2",
+  "numberOfRetries": 3,
+  "downloadTimeout": 30000
+}
+
+<> 2020-03-12T024743.200.json
+
+###
+
+GET http://super666.cn:5801/book/list/all
+Accept: */*
+Cache-Control: no-cache
+
+<> 2020-03-12T024801.200.json
+
+### download
+
+GET http://super666.cn:5801/book/smart
+Accept: */*
+Cache-Control: no-cache
+
+<> 2020-03-12T024801.200.json
+
+###

@@ -9,7 +9,7 @@
 
   <property name="CONSOLE_LOG_PATTERN" value="${FILE_LOG_PATTERN}"/>
 
-  <property name="LOG_FILE" value="/home/jujucome/Desktop/${appName}"/>
+  <property name="LOG_FILE" value="/home/ubuntu/${appName}"/>
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <encoder>
       <pattern>${FILE_LOG_PATTERN}</pattern>

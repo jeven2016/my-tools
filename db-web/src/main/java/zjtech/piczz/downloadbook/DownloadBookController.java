@@ -25,7 +25,6 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
-import javafx.event.ActionEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
@@ -33,6 +32,7 @@ import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -115,7 +115,7 @@ public class DownloadBookController extends AbstractController {
   }
 
   @GetMapping("list/{status}")
-  public Flux<List<SingleBookEntity>> refershByStatus(@PathVariable String status) {
+  public Flux<List<SingleBookEntity>> refreshByStatus(@PathVariable String status) {
     List<SingleBookEntity> list;
     if (status.equals(FILTER_ALL)) {
       list = bookService.findAll();
@@ -133,18 +133,22 @@ public class DownloadBookController extends AbstractController {
    */
   @GetMapping("start/{id}")
   @ResponseStatus(HttpStatus.OK)
-  public void startOne(@PathVariable("id") long id) {
+  public ResponseEntity startOne(@PathVariable("id") long id) {
     SingleBookEntity selectedBook = bookService.findById(id);
+    if (selectedBook == null) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
     submitDownloadTask(selectedBook);
+    return ResponseEntity.ok("You have successfuly started a task");
   }
 
   private void submitDownloadTask(SingleBookEntity selectedBook) {
     CustomJobParameter<SingleBookEntity> customJobParameter = new CustomJobParameter<>(
-       selectedBook);
+        selectedBook);
 
     //Launch a task to download one book
     JobParameters parameters = new JobParametersBuilder()
-       .addParameter(DownloadConstants.SINGLE_BOOK_PARAM, customJobParameter).toJobParameters();
+        .addParameter(DownloadConstants.SINGLE_BOOK_PARAM, customJobParameter).toJobParameters();
     try {
       log.info("launching a job for book: {}", selectedBook.getUrl());
       jobLauncher.run(job, parameters);
@@ -162,8 +166,8 @@ public class DownloadBookController extends AbstractController {
   @ResponseStatus(HttpStatus.OK)
   public void startFailure() {
     bookService.findByStatus(Stream.of(StatusEnum.FAILED)).stream()
-       .filter(singleBookEntity -> StatusEnum.FAILED.equals(singleBookEntity.getStatus()))
-       .forEach(this::submitDownloadTask);
+        .filter(singleBookEntity -> StatusEnum.FAILED.equals(singleBookEntity.getStatus()))
+        .forEach(this::submitDownloadTask);
   }
 
   @GetMapping("smart")
@@ -240,10 +244,10 @@ public class DownloadBookController extends AbstractController {
 
   private List<SingleBookEntity> getSingleBookEntities() {
     return bookService
-       .findByStatus(Stream
-          .of(StatusEnum.FAILED, StatusEnum.NEW_ADDED, StatusEnum.PARSING, StatusEnum.PARSED,
-             StatusEnum.INCOMPLETE)
-       );
+        .findByStatus(Stream
+            .of(StatusEnum.FAILED, StatusEnum.NEW_ADDED, StatusEnum.PARSING, StatusEnum.PARSED,
+                StatusEnum.INCOMPLETE)
+        );
   }
 
 
@@ -290,8 +294,8 @@ public class DownloadBookController extends AbstractController {
     }
 
     try (BufferedWriter bufferedWriter = Files
-       .newBufferedWriter(Paths.get("books_not_found.txt"), StandardOpenOption.APPEND,
-          StandardOpenOption.CREATE);
+        .newBufferedWriter(Paths.get("books_not_found.txt"), StandardOpenOption.APPEND,
+            StandardOpenOption.CREATE);
          PrintWriter printWriter = new PrintWriter(bufferedWriter)) {
       booksNotFound.forEach(printWriter::print);
       printWriter.flush();
@@ -305,7 +309,7 @@ public class DownloadBookController extends AbstractController {
   @ResponseStatus(HttpStatus.OK)
   public void validateBooks() {
     List<SingleBookEntity> bookEntityList = bookService
-       .findByStatus(Stream.of(StatusEnum.PARSED, StatusEnum.PARSING, StatusEnum.COMPLETED));
+        .findByStatus(Stream.of(StatusEnum.PARSED, StatusEnum.PARSING, StatusEnum.COMPLETED));
     bookEntityList.forEach(book -> {
       Path bookPath = downloadUtil.getBookPath(book.getName());
       if (!bookPath.toFile().exists()) {
@@ -338,13 +342,9 @@ public class DownloadBookController extends AbstractController {
       }
     } catch (Exception e) {
       log.warn("failed to list the number of files in direct {}, exception={}",
-         bookPath.toAbsolutePath(), e.getMessage());
+          bookPath.toAbsolutePath(), e.getMessage());
     }
   }
 
-  public void addPage(ActionEvent actionEvent) {
-
-
-  }
 
 }
