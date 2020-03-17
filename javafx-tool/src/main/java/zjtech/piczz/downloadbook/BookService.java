@@ -66,6 +66,11 @@ public class BookService {
     return bookRep.findByName(name);
   }
 
+  public SingleBookEntity findByUrl(String url) {
+    return bookRep.findByUrl(url);
+  }
+
+
   @Transactional
   public int updateStatus(long id, StatusEnum statusEnum) {
     return bookRep.updatestatus(id, statusEnum);

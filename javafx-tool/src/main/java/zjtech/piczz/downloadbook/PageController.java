@@ -75,6 +75,7 @@ public class PageController extends AbstractController {
     }
 
     list.clear();
+    String[] excludes = getExcludedNames();
 
     // navigate to the book
     Document doc = Jsoup.connect(link).timeout(30000).get();
@@ -93,16 +94,21 @@ public class PageController extends AbstractController {
       String name = element.text();
       String url = element.attr("href");
 
-      for (String exName : getExcludedNames()) {
-        if (!name.contains(exName.trim()) && !url.contains(exName.trim())) {
-          SingleBookEntity singleBookEntity = new SingleBookEntity();
-          singleBookEntity.setName(name);
-          singleBookEntity.setUrl(url);
-          singleBookEntity.setStatus(SingleBookEntity.StatusEnum.NEW_ADDED);
-          list.add(singleBookEntity);
+
+      if (excludes.length == 0) {
+        addIntoList(name, url);
+      } else {
+        boolean isExcludedBook = false;
+        for (String exName : excludes) {
+          if (name.contains(exName.trim()) || url.contains(exName.trim())) {
+            isExcludedBook = true;
+          }
+        }
+
+        if (!isExcludedBook) {
+          addIntoList(name, url);
         }
       }
-
 
     });
 
@@ -113,12 +119,24 @@ public class PageController extends AbstractController {
     infoUtils.showInfo(infoArea, InfoUtils.InfoType.SUCCESS, new Text(msg));
   }
 
+  private void addIntoList(String name, String url) {
+    SingleBookEntity singleBookEntity = new SingleBookEntity();
+    singleBookEntity.setName(name);
+    singleBookEntity.setUrl(url);
+    singleBookEntity.setStatus(SingleBookEntity.StatusEnum.NEW_ADDED);
+    list.add(singleBookEntity);
+  }
+
   public void addBooks() {
     bookService.fixNullStatus();
 
     Iterator<SingleBookEntity> iterator = list.listIterator();
     while (iterator.hasNext()) {
       SingleBookEntity book = iterator.next();
+      if (bookService.findByUrl(book.getUrl().trim()) != null) {
+        log.warn("the url is duplicated. url=" + book.getUrl());
+        continue;
+      }
       try {
         bookService.save(book);
         iterator.remove();
@@ -144,7 +162,6 @@ public class PageController extends AbstractController {
 
   private String[] getExcludedNames() {
     String link = excludedBookField.getText();
-    excludedBookField.clear();
     if (StringUtils.isEmpty(link)) {
       return new String[0];
     }
@@ -175,7 +192,6 @@ public class PageController extends AbstractController {
           break;
         }
       }
-
     }
 
     if (excluded) {

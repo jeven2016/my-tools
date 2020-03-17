@@ -26,6 +26,26 @@ Cache-Control: no-cache
 
 ###
 
+###
+
+GET http://super666.cn:5801/book/delete/pic
+Accept: */*
+Cache-Control: no-cache
+
+<> 2020-03-12T024801.200.json
+
+###
+
+###
+
+GET http://super666.cn:5801/book/delete/all
+Accept: */*
+Cache-Control: no-cache
+
+<> 2020-03-12T024801.200.json
+
+###
+
 ### Send POST request with json body
 POST http://super666.cn:5801/global
 Content-Type: application/json
@@ -39,6 +59,10 @@ Content-Type: application/json
 }
 
 <> 2020-03-12T024743.200.json
+
+### Send POST request with json body
+GET http://super666.cn:5801/pool
+Content-Type: application/json
 
 ###
 
