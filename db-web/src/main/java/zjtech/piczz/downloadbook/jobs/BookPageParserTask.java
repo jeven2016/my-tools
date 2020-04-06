@@ -103,11 +103,12 @@ public class BookPageParserTask implements Tasklet {
         SinglePictureEntity pictureEntity = new SinglePictureEntity();
         pictureEntity.setUrl(img.attr("src"));
         pictureEntity.setBooKName(singleBookEntity.getName());
-        pictureEntity.setPicIndex(imgIndex++);
+        pictureEntity.setPicIndex(imgIndex);
         pictureEntity.setSubPageNo(i);
 
         singleBookEntity.addPicture(pictureEntity);
         picCount++;
+        imgIndex++;
       }
     }
 

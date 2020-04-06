@@ -4,14 +4,14 @@ Cache-Control: no-cache
 
 ###
 
-### 从当前目录导入exportedBooks2.xml
+### 从当前目录导入books.xml
 GET http://super666.cn:5801/import
 Accept: */*
 Cache-Control: no-cache
 
 ###
 
-### 从当前目录导入exportedBooks2.xml
+### 从当前目录导入books.xml
 GET http://super666.cn:5801/export
 Accept: */*
 Cache-Control: no-cache

@@ -28,7 +28,7 @@ public class ImportController extends AbstractController {
   @GetMapping
   @ResponseStatus(value = HttpStatus.OK)
   public void perform() throws IOException {
-    String path="exportedBooks2.xml";
+    String path="books.xml";
     boolean isFile = Paths.get(path).toFile().isFile();
     if (!isFile) {
       throw new IllegalArgumentException(getResource("dialog.book.choose.dir.content"));

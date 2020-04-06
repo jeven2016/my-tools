@@ -24,7 +24,7 @@ public class ExportController extends AbstractController {
   public void perform() throws IOException {
 
     XmlMapper xmlMapper = new XmlMapper();
-    File outputFile = new File("exportedBooks2.xml");
+    File outputFile = new File("books.xml");
 
     List<SingleBookEntity> bookList = bookService.findAll();
     bookList.forEach(book -> book.getPictures().clear());
