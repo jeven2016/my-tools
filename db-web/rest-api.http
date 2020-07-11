@@ -46,6 +46,7 @@ Cache-Control: no-cache
 
 ###
 
+## 确定手动创建一个global对象
 ### Send POST request with json body
 POST http://super666.cn:5801/global
 Content-Type: application/json
@@ -53,7 +54,7 @@ Content-Type: application/json
 {
   "homeUrl": "http://www.177pic.pw/",
   "downloadThreadCount": 6,
-  "storageDirectory": "/home/ubuntu/pic2",
+  "storageDirectory": "/home/ubuntu/pic3",
   "numberOfRetries": 3,
   "downloadTimeout": 30000
 }

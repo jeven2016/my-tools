@@ -15,6 +15,10 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
+import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +95,11 @@ public class DownloadUtil {
 
       Path strPath = getBookPath(item.getBooKName(), settingEntity);
       if (Files.notExists(strPath)) {
-        Files.createDirectories(strPath);
+        //设置获取全部权限
+        Set<PosixFilePermission> permissions = PosixFilePermissions.fromString("rwxrwxrwx");
+        FileAttribute<Set<PosixFilePermission>> fileAttributes = PosixFilePermissions.asFileAttribute(permissions);
+
+        Files.createDirectories(strPath, fileAttributes);
       }
 
       //construct the file path
