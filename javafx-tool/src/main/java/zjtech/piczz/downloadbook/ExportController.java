@@ -77,7 +77,7 @@ public class ExportController extends AbstractController {
       return;
     }
     XmlMapper xmlMapper = new XmlMapper();
-    File outputFile = new File(directoryInput.getText() + "/exportedBooks.xml");
+    File outputFile = new File(directoryInput.getText() + "/books.xml");
 
     List<SingleBookEntity> bookList = bookService.findAll();
     bookList.forEach(book -> book.getPictures().clear());

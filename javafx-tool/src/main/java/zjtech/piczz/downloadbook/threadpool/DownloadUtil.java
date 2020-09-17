@@ -45,7 +45,7 @@ public class DownloadUtil {
     URL url = new URL(urlStr);
     //链接网络地址
     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-    connection.setRequestProperty("Referer", "http://www.177piczz.info/html/2018/07/2168507.html");
+    connection.setRequestProperty("Referer", "https://www.wapmh.com/");
     connection.setRequestProperty("Upgrade-Insecure-Requests", "1");
     connection.setRequestMethod("GET");
 //        connection.setConnectTimeout(5 * 1000);

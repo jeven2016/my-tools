@@ -16,6 +16,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import zjtech.modules.common.AbstractController;
@@ -64,6 +65,9 @@ public class PageController extends AbstractController {
 
   private List<SingleBookEntity> list = new ArrayList<>();
 
+  @Value("${page.books}")
+  String pageBooksReg;
+
   public void triggerScan() throws IOException {
     String link = pageUrlInput.getText();
     pageUrlInput.clear();
@@ -81,18 +85,18 @@ public class PageController extends AbstractController {
     Document doc = Jsoup.connect(link).timeout(30000).get();
 
     // find the books
-    Elements books = doc.getElementsByClass("grid-title");
+    Elements books = doc.select(pageBooksReg);
 
     books.forEach(book -> {
       //get title link
-      Elements elements = book.select("a[rel=bookmark]");
+  /*    Elements elements = book.select("a[rel=bookmark]");
       if (elements.size() > 1) {
         throw new IllegalStateException("invlid bookmark found");
-      }
+      }*/
 
-      Element element = elements.first();
-      String name = element.text();
-      String url = element.attr("href");
+//      Element element = elements.first();
+      String name = book.attr("title");
+      String url = book.attr("href");
 
 
       if (excludes.length == 0) {

@@ -2,6 +2,7 @@ package zjtech.piczz.downloadbook.jobs;
 
 import java.io.IOException;
 import java.util.Optional;
+
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -13,6 +14,7 @@ import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import zjtech.piczz.common.DownloadConstants;
@@ -30,6 +32,9 @@ public class BookPageParserTask implements Tasklet {
   private final GlobalSettingService globalSettingService;
 
   private final BookService bookService;
+
+  @Value("${page.subpage.count}")
+  String pagesCountReg;
 
   @Autowired
   public BookPageParserTask(GlobalSettingService globalSettingService, BookService bookService) {
@@ -71,7 +76,7 @@ public class BookPageParserTask implements Tasklet {
 
     // find the sub page count
     Document document = Jsoup.connect(singleBookEntity.getUrl()).timeout(timeout).get();
-    Elements elements = document.select(".page-links a:nth-last-child(2)");
+    Elements elements = document.select(pagesCountReg);
     String href = elements.first().attr("href");
 
     if (StringUtils.isEmpty(href)) {
@@ -80,36 +85,41 @@ public class BookPageParserTask implements Tasklet {
     }
 
     if (href.endsWith("/")) {
-      href = href.substring(0, href.lastIndexOf("/"));
+//      href = href.substring(0, href.lastIndexOf("/"));
     }
 
-    int splitIndex = href.lastIndexOf("/");
-    String prefix = href.substring(0, splitIndex);
-    int count = Integer.parseInt(href.substring(splitIndex + 1));//count of sub pages
+//    int splitIndex = href.lastIndexOf("/");
+//    String prefix = href.substring(0, splitIndex);
+//    int count = Integer.parseInt(href.substring(splitIndex + 1));//count of sub pages
+    int count = elements.size();
     singleBookEntity.setPicPageCount(count);
 
     //TODO: parese the name this book from html page
-    Element nameElem = document.selectFirst("h1[class='entry-title']");
+    Element nameElem = document.selectFirst(".title-warper .title");
     singleBookEntity.setName(nameElem.text());
 
     int picCount = 0;
+
     // navigate to each sub page
-    for (int i = 1; i <= count; i++) {
-      document = Jsoup.connect(prefix + "/" + i).timeout(timeout).get();
-      Elements imgs = document.select("img[class^='alignnone size-']");
+    int i = 1;
+    for (Element elem : elements) {
+      document = Jsoup.connect(elem.attr("href")).timeout(timeout).get();
+
+      Elements imgs = document.select("img[class^='comicimg']");
 
       int imgIndex = 1;
       for (Element img : imgs) {
         SinglePictureEntity pictureEntity = new SinglePictureEntity();
         pictureEntity.setUrl(img.attr("src"));
         pictureEntity.setBooKName(singleBookEntity.getName());
-        pictureEntity.setPicIndex(imgIndex);
+        pictureEntity.setPicIndex(imgIndex++);
         pictureEntity.setSubPageNo(i);
-
         singleBookEntity.addPicture(pictureEntity);
+
         picCount++;
-        imgIndex++;
       }
+
+      i++;
     }
 
     singleBookEntity.setPicCount(picCount);

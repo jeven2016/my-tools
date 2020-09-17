@@ -46,7 +46,7 @@ Cache-Control: no-cache
 
 ###
 
-## 确定手动创建一个global对象
+### 确定手动创建一个global对象
 ### Send POST request with json body
 POST http://super666.cn:5801/global
 Content-Type: application/json
@@ -59,7 +59,19 @@ Content-Type: application/json
   "downloadTimeout": 30000
 }
 
-<> 2020-03-12T024743.200.json
+### 确定手动创建一个global对象
+### Send POST request with json body
+POST http://super666.cn:5801/global
+Content-Type: application/json
+
+{
+  "homeUrl": "https://www.wapmh.com/",
+  "downloadThreadCount": 6,
+  "storageDirectory": "/home/ubuntu/pic3",
+  "numberOfRetries": 3,
+  "downloadTimeout": 30000
+}
+
 
 ### Send POST request with json body
 GET http://super666.cn:5801/pool
