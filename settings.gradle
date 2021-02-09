@@ -1,2 +1,3 @@
 rootProject.name = 'my-tools'
-include 'javafx-tool', 'db-web'
+//include 'javafx-tool', 'db-web'
+include 'db-web'

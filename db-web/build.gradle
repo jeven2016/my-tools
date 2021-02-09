@@ -1,42 +1,29 @@
 plugins {
-  id 'io.franzbecker.gradle-lombok' version '1.14'
+  id 'org.springframework.boot' version '2.4.2'
+  id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
-lombok {
-  version = '1.18.4'
-}
-apply plugin: "io.spring.dependency-management"
-apply plugin: 'org.springframework.boot'
 
 archivesBaseName = 'db-web'
 
 dependencies {
   // https://mvnrepository.com/artifact/org.jsoup/jsoup
-  compile group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
+  compile group: 'org.jsoup', name: 'jsoup', version: '1.13.1'
   compile 'com.netflix.archaius:archaius-core:2.0.0-rc.7'
   compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
 
-//  compile 'de.jensd:fontawesomefx-emojione:2.2.7-2'
-//  compile 'de.jensd:fontawesomefx-fontawesome:4.7.0-5'
-//  compile 'de.jensd:fontawesomefx-icons525:3.0.0-4'
-//  compile 'de.jensd:fontawesomefx-materialdesignfont:1.7.22-4'
-//  compile 'de.jensd:fontawesomefx-materialicons:2.2.0-5'
-//  compile 'de.jensd:fontawesomefx-octicons:4.3.0-5'
-//  compile 'de.jensd:fontawesomefx-weathericons:2.0.10-5'
-//  compile 'de.jensd:fontawesomefx-controls:8.15'
-//  compile 'org.controlsfx:controlsfx:8.40.11'
+  compileOnly('org.projectlombok:lombok:1.18.10')
+  annotationProcessor('org.projectlombok:lombok')
 
-  compile libs.lombok
   compile "org.springframework.boot:spring-boot-starter-batch"
   compile libs.'spring-boot-starter-webflux'
   compile libs.'h2-database'
 //  compile 'org.seleniumhq.selenium:selenium-java:3.5.3'
-//  compile libs.'spring-boot-starter-web'
   compile libs.'spring-boot-starter-data-jpa'
 
   compile libs.'spring-boot-starter-cache'
 
   //explicitly specify the ehcach3 version, required
-  compile group: 'org.ehcache', name: 'ehcache', version: '3.6.1'
+  compile group: 'org.ehcache', name: 'ehcache', version: '3.9.0'
   compile 'javax.cache:cache-api'
 
   compile 'com.zaxxer:HikariCP'
@@ -45,5 +32,4 @@ dependencies {
   runtime libs.mysql
   compile libs.'spring-boot-starter-aop'
 
-  testCompile libs.'spring-boot-starter-test'
 }
