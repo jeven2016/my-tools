@@ -1,0 +1,25 @@
+//plugins {
+//    id 'org.springframework.boot' version '2.4.2'
+//    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+//}
+
+apply plugin: 'application'
+
+mainClassName = 'pf4j.first.HelloWorld'
+
+archivesBaseName = 'pf4j-test'
+
+run {
+    systemProperty 'pf4j.pluginsDir', '/home/jujucom/Desktop/workspace/projects/my-tools/pf4j/pf4j-test/lib'
+}
+
+dependencies {
+    implementation 'org.pf4j:pf4j:3.6.0'
+    annotationProcessor(group: 'org.pf4j', name: 'pf4j', version: "3.6.0")
+    implementation project(":pf4j:pf4j-interfaces")
+
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
+}
+
+

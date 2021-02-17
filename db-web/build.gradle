@@ -21,6 +21,7 @@ dependencies {
   compile libs.'spring-boot-starter-data-jpa'
 
   compile libs.'spring-boot-starter-cache'
+  testCompile libs.'spring-boot-starter-test'
 
   //explicitly specify the ehcach3 version, required
   compile group: 'org.ehcache', name: 'ehcache', version: '3.9.0'

@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+}
+
+version '0.1'
+
+jar {
+    manifest {
+        attributes 'Plugin-Class': "greeting.Plugin1Greeting",
+                'Plugin-Id': "plugin-1",
+                'Plugin-Version': "0.1",
+                'Plugin-Provider': "Jeven"
+    }
+}
+
+dependencies {
+    compileOnly 'org.pf4j:pf4j:3.6.0'
+    compileOnly project(":pf4j:pf4j-interfaces")
+    annotationProcessor(group: 'org.pf4j', name: 'pf4j', version: "3.6.0")
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+}
+
+test {
+    useJUnitPlatform()
+}
