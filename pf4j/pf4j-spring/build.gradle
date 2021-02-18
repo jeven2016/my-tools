@@ -1,0 +1,41 @@
+plugins {
+  id 'java'
+  id 'org.springframework.boot' version '2.4.2'
+  id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+version '0.1'
+
+dependencies {
+
+  implementation 'org.pf4j:pf4j:3.6.0'
+  annotationProcessor(group: 'org.pf4j', name: 'pf4j', version: "3.6.0")
+  implementation project(":pf4j:pf4j-interfaces")
+
+  implementation('org.pf4j:pf4j-spring:0.7.0') {
+    exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    exclude group: 'commons-lang', module: 'commons-lang'
+  }
+  implementation 'org.pf4j:pf4j-update:2.3.0'
+
+  compileOnly('org.projectlombok:lombok:1.18.10')
+  annotationProcessor('org.projectlombok:lombok')
+
+  implementation libs.'spring-boot-starter-webflux'
+//  implementation libs.'spring-boot-starter-data-jpa'
+  implementation libs.'spring-boot-starter-cache'
+
+  //explicitly specify the ehcach3 version, required
+  implementation group: 'org.ehcache', name: 'ehcache', version: '3.9.0'
+  implementation 'javax.cache:cache-api'
+//  implementation 'com.zaxxer:HikariCP'
+  implementation libs.'spring-boot-starter-aop'
+//  runtime libs.'h2-database'
+
+  testImplementation libs.'spring-boot-starter-test'
+}
+
+
+test {
+  useJUnitPlatform()
+}

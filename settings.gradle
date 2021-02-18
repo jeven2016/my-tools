@@ -5,4 +5,6 @@ include 'pf4j:pf4j-test'
 include 'pf4j:pf4j-interfaces'
 include 'pf4j:plugin-1'
 include 'pf4j:plugin-2'
+include 'pf4j:pf4j-spring'
+include 'pf4j:plugin-spring'
 

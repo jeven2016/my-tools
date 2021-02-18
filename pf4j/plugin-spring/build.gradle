@@ -1,0 +1,38 @@
+plugins {
+  id 'java'
+}
+
+version '0.1'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+
+  //refer to https://github.com/pf4j/pf4j-spring/tree/master/demo/plugins/plugin2/src/main/java/org/pf4j/demo/hello
+  //refer to https://github.com/ralemy/pf4j-spring-tutorial
+  compileOnly 'org.pf4j:pf4j:3.6.0' // same with provided
+  compileOnly project(":pf4j:pf4j-interfaces")
+  annotationProcessor(group: 'org.pf4j', name: 'pf4j', version: "3.6.0")
+
+  compileOnly('org.projectlombok:lombok:1.18.10')
+  annotationProcessor('org.projectlombok:lombok')
+
+  implementation libs.'spring-boot-starter-webflux'
+//  implementation libs.'spring-boot-starter-data-jpa'
+  implementation libs.'spring-boot-starter-cache'
+
+  //explicitly specify the ehcach3 version, required
+  implementation group: 'org.ehcache', name: 'ehcache', version: '3.9.0'
+  implementation 'javax.cache:cache-api'
+//  implementation 'com.zaxxer:HikariCP'
+  implementation libs.'spring-boot-starter-aop'
+//  runtime libs.'h2-database'
+
+  testImplementation libs.'spring-boot-starter-test'
+}
+
+test {
+  useJUnitPlatform()
+}
