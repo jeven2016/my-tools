@@ -57,5 +57,5 @@ task buildPlugin(type: Jar, dependsOn: copyJars) {
     from 'build/plugin/lib'
   }
 
-  archiveExtension = 'jar'
+  archiveExtension = 'zip'
 }

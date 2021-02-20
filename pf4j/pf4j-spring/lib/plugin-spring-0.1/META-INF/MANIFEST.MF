@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Plugin-Class: api.GreetingPlugin
+Plugin-Id: plugin-spring
+Plugin-Version: 0.1
+Plugin-Provider: Jeven
+

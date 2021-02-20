@@ -7,7 +7,6 @@ plugins {
 version '0.1'
 
 dependencies {
-
   implementation 'org.pf4j:pf4j:3.6.0'
   annotationProcessor(group: 'org.pf4j', name: 'pf4j', version: "3.6.0")
   implementation project(":pf4j:pf4j-interfaces")
