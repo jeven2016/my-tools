@@ -1,5 +1,7 @@
 plugins {
   id 'java'
+  id 'org.springframework.boot' version '2.4.2'
+  id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
 version '0.1'
@@ -9,30 +11,51 @@ repositories {
 }
 
 dependencies {
-
+//  implementation fileTree(dir: 'libs', include: ['*.jar'])
   //refer to https://github.com/pf4j/pf4j-spring/tree/master/demo/plugins/plugin2/src/main/java/org/pf4j/demo/hello
   //refer to https://github.com/ralemy/pf4j-spring-tutorial
   compileOnly 'org.pf4j:pf4j:3.6.0' // same with provided
   compileOnly project(":pf4j:pf4j-interfaces")
   annotationProcessor(group: 'org.pf4j', name: 'pf4j', version: "3.6.0")
+  compileOnly 'org.pf4j:pf4j-spring:0.7.0'
 
   compileOnly('org.projectlombok:lombok:1.18.10')
   annotationProcessor('org.projectlombok:lombok')
 
-  implementation libs.'spring-boot-starter-webflux'
-//  implementation libs.'spring-boot-starter-data-jpa'
-  implementation libs.'spring-boot-starter-cache'
-
-  //explicitly specify the ehcach3 version, required
-  implementation group: 'org.ehcache', name: 'ehcache', version: '3.9.0'
-  implementation 'javax.cache:cache-api'
-//  implementation 'com.zaxxer:HikariCP'
-  implementation libs.'spring-boot-starter-aop'
-//  runtime libs.'h2-database'
-
-  testImplementation libs.'spring-boot-starter-test'
+  compileOnly libs.'spring-boot-starter-webflux'
+  implementation group: 'org.jsoup', name: 'jsoup', version: '1.13.1'
 }
 
 test {
   useJUnitPlatform()
+}
+
+task copyJars(type: Copy) {
+  from configurations.runtimeClasspath
+  into 'build/plugin/lib'
+}
+
+//build a plugin jar (non-executable jar built by spring boot plugin )
+task buildPlugin(type: Jar, dependsOn: copyJars) {
+//  archiveBaseName = "${project.name}"
+
+  manifest {
+    attributes 'Plugin-Class': "api.GreetingPlugin",
+        'Plugin-Id': "plugin-spring",
+        'Plugin-Version': "0.1",
+        'Plugin-Provider': "Jeven"
+  }
+
+  into('classes') {
+    from('build/classes/java/main') {
+      exclude '**/PluginSpringApp*'
+    }
+    from 'build/resources/main'
+  }
+
+  into('lib') {
+    from 'build/plugin/lib'
+  }
+
+  archiveExtension = 'jar'
 }

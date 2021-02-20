@@ -10,3 +10,5 @@ bin/
 *.log
 out/
 .vscode/
+
+*.jar
